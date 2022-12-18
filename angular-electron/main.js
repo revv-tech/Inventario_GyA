@@ -5,14 +5,15 @@ let win;
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 600, 
-    height: 600,
+    width: 1500, 
+    height: 900,
     backgroundColor: '#ffffff',
   })
 
 
-  win.loadURL(`file://${__dirname}/dist/index.html`);
+  win.loadURL('file://' + __dirname + '/dist/angular-electron/index.html');
 
+  
 
   
 
