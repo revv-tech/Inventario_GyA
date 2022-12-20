@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,7 @@ export class LoginComponent {
   
   form: FormGroup
 
-  constructor( private fb: FormBuilder, private userService: UserService){
+  constructor( private fb: FormBuilder, private userService: UserService, private router: Router){
   
       this.form = this.fb.group({
       user : ['',Validators.required],
@@ -39,6 +40,10 @@ export class LoginComponent {
     const password = this.form.value.password;
     // this.getAllUsers();
     // this.getUser(1);
+    // Get user to login
+    if (user == 'mreveiz' && password == '123'){
+      this.router.navigate(['dashboard'])
+    }
   }
 
   getAllUsers() {
