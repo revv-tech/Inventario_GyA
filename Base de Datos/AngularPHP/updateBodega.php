@@ -7,17 +7,13 @@ $params = json_decode($json);
 require("./DBConnection.php");
 $con = returnConection();
 
-mysqli_query($con ,"update usuario set usuario='$params->usuario',
-contraseña='$params->contraseña',
-tipoUsuario='$params->tipoUsuario',
-IDInventario=$params->IDInventario 
-where IDUsuario=$params->IDUsuario");
+mysqli_query($con ,"update bodega set IDBodega='$params->IDBodega' where IDBodega=$params->IDBodega");
 
 class Result{}
 
 $response = new Result();
 $response->resultado = 'OK';
-$response->mensaje = 'Usuario modificado';
+$response->mensaje = 'bodega modificada';
 
 
 header('Content-Type: application/json');

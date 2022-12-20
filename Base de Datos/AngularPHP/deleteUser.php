@@ -10,7 +10,7 @@ class Result{}
 
 $response = new Result();
 $response->resultado = 'OK';
-$response->mensaje ='usuario borrado';
+$response->mensaje ='Usuario eliminado';
 
 header('Content-Type: application/json');
 echo json_encode($response);
