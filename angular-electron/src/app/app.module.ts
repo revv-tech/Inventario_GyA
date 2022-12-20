@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 // Angular Material
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -28,7 +29,8 @@ import { LoginComponent } from './components/login/login.component';
     MatButtonModule,
     MatFormFieldModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

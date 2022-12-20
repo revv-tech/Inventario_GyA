@@ -14,8 +14,8 @@ function createWindow () {
   win.loadURL('file://' + __dirname + '/dist/angular-electron/index.html');
 
   
-  //// uncomment below to open the DevTools.
-  // win.webContents.openDevTools()
+  // uncomment below to open the DevTools.
+  win.webContents.openDevTools()
 
   // Event when the window is closed.
   win.on('closed', function () {
