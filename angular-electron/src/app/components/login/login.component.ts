@@ -55,6 +55,7 @@ export class LoginComponent {
       
     });
   }
+  
   deleteUser(IDUsuario: number){
     this.userService.deleteUser(IDUsuario).subscribe(datos =>{
       if(datos['resultado'] === 'OK') {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-12-2022 a las 08:13:45
+-- Tiempo de generación: 20-12-2022 a las 09:53:43
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.1.12
 
@@ -39,7 +39,7 @@ CREATE TABLE `bodega` (
 
 CREATE TABLE `inventario` (
   `IDInventario` int(11) NOT NULL,
-  `Nombre` varchar(16) NOT NULL,
+  `nombre` varchar(16) NOT NULL,
   `IDBodega` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -142,13 +142,13 @@ ALTER TABLE `venta`
 -- AUTO_INCREMENT de la tabla `bodega`
 --
 ALTER TABLE `bodega`
-  MODIFY `IDBodega` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `IDBodega` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `inventario`
 --
 ALTER TABLE `inventario`
-  MODIFY `IDInventario` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `IDInventario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
