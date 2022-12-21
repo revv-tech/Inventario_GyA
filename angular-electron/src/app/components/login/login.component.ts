@@ -31,19 +31,6 @@ export class LoginComponent {
   }
 
   ngOnInit() : void{
-
-  }
-
-  ingresar(){
-    console.log(this.form);
-    const user = this.form.value.user;
-    const password = this.form.value.password;
-    // this.getAllUsers();
-    // this.getUser(1);
-    // Get user to login
-    if (user == 'mreveiz' && password == '123'){
-      this.router.navigate(['dashboard'])
-    }
   }
 
   getAllUsers() {
@@ -84,6 +71,18 @@ export class LoginComponent {
   getUser(IDUsuario){
     this.userService.getUser(IDUsuario).subscribe(datos =>
       this.user = datos[0]);
+  }
+
+  ingresar(){
+    console.log(this.form);
+    const user = this.form.value.user;
+    const password = this.form.value.password;
+    this.getUser(3);
+    console.log(this.user);
+    // Get user to login
+    if (user == 'mreveiz' && password == '123'){
+      this.router.navigate(['dashboard'])
+    }
   }
 
 }
