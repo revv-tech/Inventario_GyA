@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+
 export interface Product {
   idProduct: number;
   name: string;
@@ -21,6 +23,7 @@ const ELEMENT_DATA: Product[] = [
 })
 export class ProductComponent {
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   form: FormGroup
   displayedColumns: string[] = ['idProduct', 'name', 'price', 'quantity', 'actions'];
   dataSource = ELEMENT_DATA;
@@ -35,6 +38,11 @@ export class ProductComponent {
       quantity : ['',Validators.required],
     })
   }
+
+  ngAfterViewInit() {
+    this.paginator = this.paginator;
+  }
+
   ngOnInit() : void{
 
   }
