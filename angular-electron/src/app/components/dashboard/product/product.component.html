@@ -5,7 +5,7 @@
     <div class ="body">
         <div class="login">
             <h1>Gestinar producto</h1>
-            <form [formGroup] = "form">
+            <form [formGroup] = "form" (ngSubmit) = "agregar()">
                 <div class="example-container">
                     <mat-form-field appearance="fill" class = "ancho">
                         <mat-label>Nombre del producto</mat-label>

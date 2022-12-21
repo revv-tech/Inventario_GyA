@@ -28,4 +28,8 @@ export class UserService {
   updateUser(user){
     return this.http.post(`${this.url}updateUser.php`, JSON.stringify(user));
   }
+
+  loginUser(usuario, contraseña){
+    return this.http.get(`${this.url}loginUsuario.php?usuario=${usuario}&contraseña=${contraseña}`);
+  }
 }

@@ -25,7 +25,7 @@ export class ProductoService {
     return this.http.get(`${this.url}getProducto.php?IDProducto=${IDProducto}`);
   }
 
-  updateUser(producto){
+  updateProducto(producto){
     return this.http.post(`${this.url}updateProducto.php`, JSON.stringify(producto));
   }
 }

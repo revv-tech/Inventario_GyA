@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -9,6 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  userVerified = false;
   users = null;
   user = {
     IDUser: null,
@@ -33,54 +35,59 @@ export class LoginComponent {
   ngOnInit() : void{
   }
 
-  getAllUsers() {
-    this.userService.getAllUsers().subscribe(result => 
-      this.users = result);
+  async getAllUsers() {
+    const data$ = this.userService.getAllUsers(); 
+    const data = await lastValueFrom(data$);
+    this.users = data;
   }
 
-  addUser(){
-    this.userService.addUser(this.user).subscribe(datos =>{
-      if(datos['resultado'] === 'OK') {
-        alert(datos['mensaje']);
-        this.getAllUsers();
-      }
-      
-    });
+  async addUser(){
+    const data$ = this.userService.addUser(this.user);
+    const data = await lastValueFrom(data$);
+    if (data['resultado'] === 'OK') {
+      alert(data['mensaje']);
+      this.getAllUsers();
+    }
   }
   
-  deleteUser(IDUsuario: number){
-    this.userService.deleteUser(IDUsuario).subscribe(datos =>{
-      if(datos['resultado'] === 'OK') {
-        alert(datos['mensaje']);
-        this.getAllUsers();
-      }
-    });
+  async deleteUser(IDUsuario: number){
+    const data$ = this.userService.deleteUser(IDUsuario);
+    const data = await lastValueFrom(data$);
+    if (data['resultado'] === 'OK') {
+      alert(data['mensaje']);
+      this.getAllUsers();
+    }
   }
 
-  updateUser(){
-    // console.log("se presiono modificar");
-    this.userService.updateUser(this.user).subscribe(datos =>{
-      if(datos['resultado'] === 'OK') {
-        alert(datos['mensaje']);
-        this.getAllUsers();
-      }
-      
-    });
+  async updateUser(){
+    const data$ = this.userService.updateUser(this.user);
+    const data = await lastValueFrom(data$);
+    if (data['resultado'] === 'OK') {
+      alert(data['mensaje']);
+      this.getAllUsers();
+    }
   }
 
-  getUser(IDUsuario){
-    this.userService.getUser(IDUsuario).subscribe(datos =>
-      this.user = datos[0]);
+  async getUser(IDUsuario){
+    const data$ = this.userService.getUser(IDUsuario);
+    const data = await lastValueFrom(data$);
+    this.user = data[0];
   }
 
-  ingresar(){
-    console.log(this.form);
-    const user = this.form.value.user;
+  async loginUser(usuario, contraseña){
+    const data$ = this.userService.loginUser(usuario, contraseña);
+    const data = await lastValueFrom(data$);
+    this.user = data[0];
+    this.userVerified = true;
+  }
+
+  async ingresar(){
+    const username = this.form.value.user;
     const password = this.form.value.password;
-    this.getUser(3);
-    console.log(this.user);
+    await this.loginUser(username, password);
+
     // Get user to login
-    if (user == 'mreveiz' && password == '123'){
+    if (this.userVerified){
       this.router.navigate(['dashboard'])
     }
   }
