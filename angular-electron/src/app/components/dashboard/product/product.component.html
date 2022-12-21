@@ -1,3 +1,100 @@
-<div class="button" routerLink="/product">
-    Agregar Producto
+<!--
+    Formulario de Agregar producto
+-->
+
+    <div class ="body">
+        <div class="login">
+            <h1>Agregar producto</h1>
+            <form [formGroup] = "form">
+                <div class="example-container">
+                    <mat-form-field appearance="fill" class = "ancho">
+                        <mat-label>Nombre del producto</mat-label>
+                            <input matInput autocomplete="off" formControlName = "nameProduct">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class = "ancho">
+                        <mat-label>Código de Barras</mat-label>
+                            <input matInput autocomplete="off" formControlName = "barCode">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class = "ancho">
+                        <mat-label>Código de CABYS</mat-label>
+                            <input matInput autocomplete="off" formControlName = "cabyCode">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class = "ancho">
+                        <mat-label>Precio</mat-label>
+                            <input matInput autocomplete="off" formControlName = "price">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class = "ancho">
+                        <mat-label>IVA</mat-label>
+                            <input matInput autocomplete="off" formControlName = "iva">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class = "ancho">
+                        <mat-label>Cantidad</mat-label>
+                            <input matInput autocomplete="off" formControlName = "quantity">
+                    </mat-form-field>
+                    <button class="button buttonHover"> Agregar Producto</button>
+                  </div>
+            </form>  
+        </div>
+        
+    
+
+<!--
+    Lista de Productos
+-->
+    <div class="tableSettings ancho">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="text-align: right;">
+
+            <!-- Id Column -->
+            <ng-container matColumnDef="idProduct">
+            <th mat-header-cell *matHeaderCellDef> No. </th>
+            <td mat-cell *matCellDef="let element"> {{element.idProduct}} </td>
+            </ng-container>
+        
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Nombre de Producto </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+        
+            <!-- Price Column -->
+            <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef> Precio </th>
+            <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+            </ng-container>
+        
+            <!-- Quantity Column -->
+            <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+            <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+            </ng-container>
+
+            <!-- Actions -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>  </th>
+                <td mat-cell *matCellDef="let element" style="text-align: right;"> 
+                    <a class="pointer" style="color:#1878b0" matTooltip="Consultar producto">
+                        <mat-icon>
+                            search
+                        </mat-icon>
+                    </a>
+                    <a class="pointer" style="color:#1f516f" matTooltip="Editar producto">
+                        <mat-icon>
+                            edit
+                        </mat-icon>
+                    </a>
+                    <a class="pointer" style="color:red" matTooltip="Eliminar producto">
+                        <mat-icon>
+                            delete
+                        </mat-icon>
+                    </a>
+                </td>
+                </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+    </div>
 </div>
+
+    
+
