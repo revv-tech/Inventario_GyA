@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ProductoService } from 'src/app/services/producto.service';
 import { lastValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
+import {Router} from '@angular/router';
 
 export interface Product {
   IDProducto: any;
@@ -40,15 +41,16 @@ export class ProductComponent {
   };
   displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad', 'Actions'];
   dataSource: any;
+  isEditar: boolean;
 
-  constructor( private fb: FormBuilder, private productService: ProductoService){
+  constructor( private fb: FormBuilder, private productService: ProductoService, private router: Router){
     this.form = this.fb.group({
       nameProduct : [''],
       barCode : [''],
       cabyCode : [''],
       price : [''],
       iva : [''],
-      quantity : [''],
+      quantity : ['']
     })
   }
 
@@ -69,28 +71,16 @@ export class ProductComponent {
   async addProduct(){
     const data$ = this.productService.addProducto(this.product);
     const data = await lastValueFrom(data$);
-    if (data['resultado'] === 'OK') {
-      alert(data['mensaje']);
-      this.getAllProductos();
-    }
   }
   
   async deleteProducto(IDProducto){
     const data$ = this.productService.deleteProducto(IDProducto);
     const data = await lastValueFrom(data$);
-    if (data['resultado'] === 'OK') {
-      alert(data['mensaje']);
-      this.getAllProductos();
-    }
   }
 
   async updateProducto(){
     const data$ = this.productService.updateProducto(this.product);
     const data = await lastValueFrom(data$);
-    if (data['resultado'] === 'OK') {
-      alert(data['mensaje']);
-      this.getAllProductos();
-    }
   }
 
   async getProducto(IDProducto){
@@ -100,7 +90,8 @@ export class ProductComponent {
   }
 
   async setElementData(){
-    this.resetForm();
+    this.form.reset();
+    this.isEditar = false;
     let tempData: Product[] = [];
     await this.getAllProductos();
     for (let e in this.products) {
@@ -174,16 +165,19 @@ export class ProductComponent {
     this.product.nombre = element.nombre;
     this.product.precio = element.precio;
     this.product.IDVenta = element.IDVenta;
+    // Habilitamos modo Editar
+    this.isEditar = true;
   }
 
-  resetForm(){
-    this.form.setValue({
-      nameProduct: ' ',
-      barCode: ' ',
-      cabyCode: ' ',
-      price: ' ',
-      iva: ' ',
-      quantity: ' '
-    });
+  confirmar(buttonType){
+    if(buttonType==="agregar") {
+        this.agregar();
+    }
+    if(buttonType==="editar"){
+        this.editar();
+    }
+    if(buttonType==="cancelar"){
+      this.setElementData();
+    }
   }
 }

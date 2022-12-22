@@ -44,28 +44,16 @@ export class LoginComponent {
   async addUser(){
     const data$ = this.userService.addUser(this.user);
     const data = await lastValueFrom(data$);
-    if (data['resultado'] === 'OK') {
-      alert(data['mensaje']);
-      this.getAllUsers();
-    }
   }
   
   async deleteUser(IDUsuario: number){
     const data$ = this.userService.deleteUser(IDUsuario);
     const data = await lastValueFrom(data$);
-    if (data['resultado'] === 'OK') {
-      alert(data['mensaje']);
-      this.getAllUsers();
-    }
   }
 
   async updateUser(){
     const data$ = this.userService.updateUser(this.user);
     const data = await lastValueFrom(data$);
-    if (data['resultado'] === 'OK') {
-      alert(data['mensaje']);
-      this.getAllUsers();
-    }
   }
 
   async getUser(IDUsuario){

@@ -5,7 +5,7 @@
     <div class ="body">
         <div class="login">
             <h1>Gestinar producto</h1>
-            <form [formGroup] = "form" (ngSubmit) = "agregar()">
+            <form [formGroup] = "form" option="isEditar">
                 <div class="example-container">
                     <mat-form-field appearance="fill" class = "ancho">
                         <mat-label>Nombre del producto</mat-label>
@@ -31,7 +31,9 @@
                         <mat-label>Cantidad</mat-label>
                             <input matInput autocomplete="off" formControlName = "quantity">
                     </mat-form-field>
-                    <button class="button buttonHover"> Confirmar </button>
+                    <button type="submit" class="button buttonHover" style="background-color:darkorchid" [disabled]="isEditar" (click)="confirmar('agregar')"> Agregar </button>
+                    <button type="button" class="button buttonHover" style="background-color:lightskyblue" [disabled]="!isEditar" (click)="confirmar('editar')"> Editar </button>
+                    <button type="button" class="button buttonHover" style="background-color:red" (click)="confirmar('cancelar')"> Cancelar </button>
                   </div>
             </form>  
         </div>
