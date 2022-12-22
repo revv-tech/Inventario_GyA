@@ -7,16 +7,14 @@ $params = json_decode($json);
 require("./DBConnection.php");
 $con = returnConection();
 
-mysqli_query($con ,"update producto set IDProducto='$params->IDProducto',
-cantidad='$params->cantidad',
-codigoBarra='$params->codigoBarra',
-codigoCabys=$params->codigoCabys',
-iva=$params->iva',
-nombre=$params->nombre',
-precio=$params->precio',
-IDVenta=$params->IDVenta',
-IDBodega=$params->IDBodega' 
-where IDProducto=$params->IDProducto");
+mysqli_query($con ,"update producto set 
+    cantidad='$params->cantidad', 
+    codigoBarra='$params->codigoBarra', 
+    codigoCabys='$params->codigoCabys', 
+    iva='$params->iva', 
+    nombre='$params->nombre', 
+    precio='$params->precio'
+    where IDProducto=$params->IDProducto");
 
 class Result{}
 

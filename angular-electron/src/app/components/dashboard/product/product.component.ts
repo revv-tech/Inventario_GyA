@@ -3,20 +3,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { ProductoService } from 'src/app/services/producto.service';
 import { lastValueFrom } from 'rxjs';
+import { MatTableDataSource } from '@angular/material/table';
 
 export interface Product {
-  IDProducto: null;
-  cantidad: null;
-  codigoBarra: null;
-  codigoCabys: null;
-  iva: null;
-  nombre: null;
-  precio: null;
-  IDVenta: null;
-  IDBodega: null;
+  IDProducto: any;
+  cantidad: any;
+  codigoBarra: any;
+  codigoCabys: any;
+  iva: any;
+  nombre: any;
+  precio: any;
+  IDVenta: any;
+  IDBodega: any;
 }
-
-let ELEMENT_DATA: Product[] = [];
 
 @Component({
   selector: 'app-product',
@@ -40,16 +39,16 @@ export class ProductComponent {
     IDBodega: null
   };
   displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad', 'Actions'];
-  dataSource = ELEMENT_DATA;
+  dataSource: any;
 
   constructor( private fb: FormBuilder, private productService: ProductoService){
     this.form = this.fb.group({
-      nameProduct : ['',Validators.required],
-      barCode : ['',Validators.required],
-      cabyCode : ['',Validators.required],
-      price : ['',Validators.required],
-      iva : ['',Validators.required],
-      quantity : ['',Validators.required],
+      nameProduct : [''],
+      barCode : [''],
+      cabyCode : [''],
+      price : [''],
+      iva : [''],
+      quantity : [''],
     })
   }
 
@@ -76,8 +75,8 @@ export class ProductComponent {
     }
   }
   
-  async deleteProducto(IDUsuario: number){
-    const data$ = this.productService.deleteProducto(IDUsuario);
+  async deleteProducto(IDProducto){
+    const data$ = this.productService.deleteProducto(IDProducto);
     const data = await lastValueFrom(data$);
     if (data['resultado'] === 'OK') {
       alert(data['mensaje']);
@@ -101,34 +100,90 @@ export class ProductComponent {
   }
 
   async setElementData(){
+    this.resetForm();
     let tempData: Product[] = [];
     await this.getAllProductos();
     for (let e in this.products) {
       tempData.push(this.products[e]);
     }
-    ELEMENT_DATA = tempData;
-    console.log(ELEMENT_DATA);
+    this.dataSource = new MatTableDataSource(tempData);
   }
 
   async agregar(){
+    // Obtenemos valores del formulario
     const name = this.form.value.nameProduct;
     const barCode = this.form.value.barCode;
     const cabyCode = this.form.value.cabyCode;
     const price = this.form.value.price;
     const iva = this.form.value.iva;
     const quantity = this.form.value.quantity;
-
-    this.product.IDBodega = 2;
+    // Asignamos valores al objeto producto
     this.product.cantidad = quantity;
     this.product.codigoBarra = barCode;
     this.product.codigoCabys = cabyCode;
     this.product.iva = iva;
     this.product.nombre = name;
     this.product.precio = price;
-
+    // consulta SQL
     await this.addProduct();
+    await this.setElementData();
+  }
 
-    await this.getAllProductos();
-    console.log(this.products);
+  async eliminar(id){
+    await this.deleteProducto(id);
+    await this.setElementData();
+  }
+
+  async editar(){
+    // Obtenemos valores del formularioS
+    const name = this.form.value.nameProduct;
+    const barCode = this.form.value.barCode;
+    const cabyCode = this.form.value.cabyCode;
+    const price = this.form.value.price;
+    const iva = this.form.value.iva;
+    const quantity = this.form.value.quantity;
+    // Asignamos valores al objeto producto
+    this.product.cantidad = quantity;
+    this.product.codigoBarra = barCode;
+    this.product.codigoCabys = cabyCode;
+    this.product.iva = iva;
+    this.product.nombre = name;
+    this.product.precio = price;
+    this.product.IDVenta = 'NULL';
+    // consulta SQL
+    await this.updateProducto();
+    await this.setElementData();
+  }
+
+  cargarProducto(element){
+    // Cargamos datos en el formulario
+    this.form.setValue({
+      nameProduct: element.nombre,
+      barCode: element.codigoBarra,
+      cabyCode: element.codigoCabys,
+      price: element.precio,
+      iva: element.iva,
+      quantity: element.cantidad
+    });
+    // Asignamos valores al objeto producto
+    this.product.IDProducto = element.IDProducto;
+    this.product.cantidad = element.cantidad;
+    this.product.codigoBarra = element.codigoBarra;
+    this.product.codigoCabys = element.codigoCabys;
+    this.product.iva = element.iva;
+    this.product.nombre = element.nombre;
+    this.product.precio = element.precio;
+    this.product.IDVenta = element.IDVenta;
+  }
+
+  resetForm(){
+    this.form.setValue({
+      nameProduct: ' ',
+      barCode: ' ',
+      cabyCode: ' ',
+      price: ' ',
+      iva: ' ',
+      quantity: ' '
+    });
   }
 }
