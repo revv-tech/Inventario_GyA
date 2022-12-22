@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-12-2022 a las 01:03:32
+-- Tiempo de generación: 22-12-2022 a las 01:40:46
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.1.12
 
@@ -31,6 +31,13 @@ CREATE TABLE `bodega` (
   `IDBodega` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `bodega`
+--
+
+INSERT INTO `bodega` (`IDBodega`) VALUES
+(2);
+
 -- --------------------------------------------------------
 
 --
@@ -39,7 +46,7 @@ CREATE TABLE `bodega` (
 
 CREATE TABLE `inventario` (
   `IDInventario` int(11) NOT NULL,
-  `Nombre` varchar(16) NOT NULL,
+  `nombre` varchar(16) NOT NULL,
   `IDBodega` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -52,14 +59,21 @@ CREATE TABLE `inventario` (
 CREATE TABLE `producto` (
   `IDProducto` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL,
-  `codigoBarra` int(11) NOT NULL,
-  `codigoCabys` int(11) NOT NULL,
-  `iva` int(11) NOT NULL,
+  `codigoBarra` varchar(32) NOT NULL,
+  `codigoCabys` varchar(32) NOT NULL,
+  `iva` float NOT NULL,
   `nombre` varchar(16) NOT NULL,
   `precio` int(11) NOT NULL,
-  `IDVenta` int(11) NOT NULL,
+  `IDVenta` int(11) DEFAULT NULL,
   `IDBodega` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `producto`
+--
+
+INSERT INTO `producto` (`IDProducto`, `cantidad`, `codigoBarra`, `codigoCabys`, `iva`, `nombre`, `precio`, `IDVenta`, `IDBodega`) VALUES
+(1, 15, '23456', '5432', 0.13, 'Coca Cola', 1000, NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -72,8 +86,15 @@ CREATE TABLE `usuario` (
   `usuario` varchar(16) NOT NULL,
   `contraseña` varchar(16) NOT NULL,
   `tipoUsuario` tinyint(1) NOT NULL DEFAULT 0,
-  `IDInventario` int(11) NOT NULL
+  `IDInventario` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`IDUsuario`, `usuario`, `contraseña`, `tipoUsuario`, `IDInventario`) VALUES
+(1, 'admin', '123', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -116,14 +137,15 @@ ALTER TABLE `producto`
   ADD PRIMARY KEY (`IDProducto`),
   ADD UNIQUE KEY `codigoBarra` (`codigoBarra`),
   ADD UNIQUE KEY `codigoCabys` (`codigoCabys`),
-  ADD KEY `fk_producto_idventa` (`IDVenta`),
-  ADD KEY `fk_producto_idbodega` (`IDBodega`);
+  ADD KEY `fk_producto_idbodega` (`IDBodega`),
+  ADD KEY `fk_producto_idventa` (`IDVenta`);
 
 --
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`IDUsuario`),
+  ADD UNIQUE KEY `usuario` (`usuario`),
   ADD KEY `fk_usuario_idinventario` (`IDInventario`);
 
 --
@@ -141,25 +163,25 @@ ALTER TABLE `venta`
 -- AUTO_INCREMENT de la tabla `bodega`
 --
 ALTER TABLE `bodega`
-  MODIFY `IDBodega` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `IDBodega` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `inventario`
 --
 ALTER TABLE `inventario`
-  MODIFY `IDInventario` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `IDInventario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `IDProducto` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `IDProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `IDUsuario` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `IDUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `venta`
@@ -175,26 +197,26 @@ ALTER TABLE `venta`
 -- Filtros para la tabla `inventario`
 --
 ALTER TABLE `inventario`
-  ADD CONSTRAINT `fk_inventario_idbodega` FOREIGN KEY (`IDBodega`) REFERENCES `bodega` (`IDBodega`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_inventario_idbodega` FOREIGN KEY (`IDBodega`) REFERENCES `bodega` (`IDBodega`);
 
 --
 -- Filtros para la tabla `producto`
 --
 ALTER TABLE `producto`
-  ADD CONSTRAINT `fk_producto_idbodega` FOREIGN KEY (`IDBodega`) REFERENCES `bodega` (`IDBodega`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_producto_idventa` FOREIGN KEY (`IDVenta`) REFERENCES `venta` (`IDVenta`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_producto_idbodega` FOREIGN KEY (`IDBodega`) REFERENCES `bodega` (`IDBodega`),
+  ADD CONSTRAINT `fk_producto_idventa` FOREIGN KEY (`IDVenta`) REFERENCES `venta` (`IDVenta`);
 
 --
 -- Filtros para la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  ADD CONSTRAINT `fk_usuario_idinventario` FOREIGN KEY (`IDInventario`) REFERENCES `inventario` (`IDInventario`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_usuario_idinventario` FOREIGN KEY (`IDInventario`) REFERENCES `inventario` (`IDInventario`);
 
 --
 -- Filtros para la tabla `venta`
 --
 ALTER TABLE `venta`
-  ADD CONSTRAINT `fk_venta_idinventario` FOREIGN KEY (`IDInventario`) REFERENCES `inventario` (`IDInventario`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_venta_idinventario` FOREIGN KEY (`IDInventario`) REFERENCES `inventario` (`IDInventario`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

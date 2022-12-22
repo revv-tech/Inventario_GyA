@@ -5,8 +5,8 @@ let win;
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1500, 
-    height: 900,
+    width: 2000, 
+    height: 2500,
     backgroundColor: '#ffffff',
   })
 
@@ -14,12 +14,8 @@ function createWindow () {
   win.loadURL('file://' + __dirname + '/dist/angular-electron/index.html');
 
   
-
-  
-
-
-  //// uncomment below to open the DevTools.
-  // win.webContents.openDevTools()
+  // uncomment below to open the DevTools.
+  win.webContents.openDevTools()
 
   // Event when the window is closed.
   win.on('closed', function () {
