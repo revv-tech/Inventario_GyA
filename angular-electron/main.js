@@ -5,6 +5,7 @@ let win;
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
+    autoHideMenuBar: true,
     width: 2000, 
     height: 2500,
     backgroundColor: '#ffffff',
@@ -15,7 +16,7 @@ function createWindow () {
 
   
   // uncomment below to open the DevTools.
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
 
   // Event when the window is closed.
   win.on('closed', function () {
