@@ -13,6 +13,9 @@ import {MatTableModule} from '@angular/material/table';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatIconModule} from '@angular/material/icon';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatCardModule} from '@angular/material/card';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 @NgModule({
   declarations: [],
   imports: [
@@ -28,7 +31,10 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatTableModule,
     MatTooltipModule,
     MatIconModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSnackBarModule,
+    MatCardModule,
+    MatDatepickerModule
   ],
   exports: [
     MatSlideToggleModule,
@@ -42,7 +48,10 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatTableModule,
     MatTooltipModule,
     MatIconModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSnackBarModule,
+    MatCardModule,
+    MatDatepickerModule
   ]
 })
 export class SharedComponentsModule { }

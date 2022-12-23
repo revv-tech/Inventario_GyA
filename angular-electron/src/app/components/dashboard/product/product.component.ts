@@ -5,6 +5,7 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { lastValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import {Router} from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface Product {
   IDProducto: any;
@@ -42,8 +43,9 @@ export class ProductComponent {
   displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad', 'Actions'];
   dataSource: any;
   isEditar: boolean;
+  fechaCaducidad: Date | null;
 
-  constructor( private fb: FormBuilder, private productService: ProductoService, private router: Router){
+  constructor( private fb: FormBuilder, private productService: ProductoService, private router: Router, private _snackBar: MatSnackBar){
     this.form = this.fb.group({
       nameProduct : [''],
       barCode : [''],
@@ -118,11 +120,21 @@ export class ProductComponent {
     // consulta SQL
     await this.addProduct();
     await this.setElementData();
+    this._snackBar.open("El producto fue agregado con éxito!",'',{
+      duration: 1500,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
+    })
   }
 
   async eliminar(id){
     await this.deleteProducto(id);
     await this.setElementData();
+    this._snackBar.open("El producto fue eliminado con éxito!",'',{
+      duration: 1500,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
+    })
   }
 
   async editar(){
@@ -144,6 +156,13 @@ export class ProductComponent {
     // consulta SQL
     await this.updateProducto();
     await this.setElementData();
+    this._snackBar.open("El producto fue editado con éxito!",'',{
+      duration: 1500,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
+    })
+
+    
   }
 
   cargarProducto(element){
