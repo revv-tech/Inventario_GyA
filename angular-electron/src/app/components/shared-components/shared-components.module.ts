@@ -15,7 +15,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatCardModule} from '@angular/material/card';
+import { MatNativeDateModule } from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+
 @NgModule({
   declarations: [],
   imports: [
@@ -34,7 +36,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     MatPaginatorModule,
     MatSnackBarModule,
     MatCardModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   exports: [
     MatSlideToggleModule,
@@ -51,7 +54,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     MatPaginatorModule,
     MatSnackBarModule,
     MatCardModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class SharedComponentsModule { }

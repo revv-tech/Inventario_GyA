@@ -1,1 +1,28 @@
-<p>report works!</p>
+<mat-toolbar style="height:80px;" color="primary" >
+    <span class="example-spacer" ></span>
+    <span class="margin-top: 20px margin-bottom:20px" style="font-weight:lighter" >Reportes de Inventario</span>
+    <span class="example-spacer"></span>
+</mat-toolbar>
+
+<!--
+    Calendario de Fechas para reportes
+-->
+
+<mat-card style="margin-top: 20px; margin-bottom: 20px;">
+  <div class ="body">
+    <div class="login">
+      <mat-form-field appearance="outline">
+        <mat-label>Ingresa un rango de fechas</mat-label>
+        <mat-date-range-input [rangePicker]="picker" [formGroup]="rangoDeFechas">
+          <input matStartDate placeholder="Fecha de Inicio" formControlName="firstDate">
+          <input matEndDate placeholder=" Fecha Final" formControlName="lastDate">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+      </div>
+  </div>
+
+
+
+</mat-card>
