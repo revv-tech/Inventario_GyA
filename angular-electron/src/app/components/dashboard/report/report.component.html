@@ -1,16 +1,28 @@
 <mat-toolbar style="height:80px;" color="primary" >
     <span class="example-spacer" ></span>
     <span class="margin-top: 20px margin-bottom:20px" style="font-weight:lighter" >Reportes de Inventario</span>
-    <span class="example-spacer"></span>
 </mat-toolbar>
 
-<!--
-    Calendario de Fechas para reportes
--->
 
 <mat-card style="margin-top: 20px; margin-bottom: 20px;">
+
   <div class ="body">
     <div class="login">
+
+      <!--
+        Selecccionador de Reportes
+      -->
+      <h3 class="margin-top: 20px margin-bottom:20px" style="font-weight:lighter" >Informe sobre Reportes de Inventario</h3>
+      <mat-form-field appearance="fill">
+        <mat-label>Tipo de reporte a realizar:</mat-label>
+        <mat-select>
+          <mat-option value="report">Reportes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!--
+      Calendario de Fechas para reportes
+      -->
       <mat-form-field appearance="outline">
         <mat-label>Ingresa un rango de fechas</mat-label>
         <mat-date-range-input [rangePicker]="picker" [formGroup]="rangoDeFechas">
@@ -20,9 +32,50 @@
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-date-range-picker #picker></mat-date-range-picker>
       </mat-form-field>
+
+
+      <button mat-raised-button color="primary" type="button" (click)="generar()"> Generar reporte </button>
+      <button mat-button color="warn" type="button" (click)="cancelar()"> Cancelar </button>
+    </div>
+  
+
+      <!--
+          Lista de Productos
+      -->
+      <div class="tableSettings ancho">
+          <span class="margin-top: 20px margin-bottom:20px" style="font-weight:bold" >Reportes sobre: </span>
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="text-align: right;">
+              
+
+              <!-- Id Column -->
+              <ng-container matColumnDef="IDProducto">
+              <th mat-header-cell *matHeaderCellDef> No. </th>
+              <td mat-cell *matCellDef="let element"> {{element?.IDProducto}} </td>
+              </ng-container>
+          
+              <!-- Name Column -->
+              <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef> Nombre de Producto </th>
+              <td mat-cell *matCellDef="let element"> {{element?.nombre}} </td>
+              </ng-container>
+          
+              <!-- Price Column -->
+              <ng-container matColumnDef="precio">
+              <th mat-header-cell *matHeaderCellDef> Precio </th>
+              <td mat-cell *matCellDef="let element"> {{element?.precio}} </td>
+              </ng-container>
+          
+              <!-- Quantity Column -->
+              <ng-container matColumnDef="cantidad">
+              <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+              <td mat-cell *matCellDef="let element"> {{element?.cantidad}} </td>
+              </ng-container>
+              
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
       </div>
-  </div>
-
-
+    </div>
+    
 
 </mat-card>

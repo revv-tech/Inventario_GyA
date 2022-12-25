@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Angular Material
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatInputModule} from '@angular/material/input';
@@ -17,7 +19,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatCardModule} from '@angular/material/card';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-
+import {MatGridListModule} from '@angular/material/grid-list';
 @NgModule({
   declarations: [],
   imports: [
@@ -37,7 +39,10 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     MatSnackBarModule,
     MatCardModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatGridListModule,
+    MatOptionModule,
+    MatSelectModule
   ],
   exports: [
     MatSlideToggleModule,
@@ -55,7 +60,10 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     MatSnackBarModule,
     MatCardModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatGridListModule,
+    MatOptionModule,
+    MatSelectModule
   ]
 })
 export class SharedComponentsModule { }
