@@ -8,34 +8,40 @@
 
   <div class ="body">
     <div class="login">
-      <h3 class="margin-top: 20px margin-bottom:20px" style="font-weight:bold" >Informe sobre Reportes de Inventario</h3>
       <img src="./assets/images/report.png" width="50%" style="margin-bottom: 20px;">
-      <!--
-        Selecccionador de Reportes
-      -->
-      <mat-form-field appearance="fill">
-        <mat-label>Tipo de reporte a realizar:</mat-label>
-        <mat-select>
-          <mat-option value="report">Reportes</mat-option>
-        </mat-select>
-      </mat-form-field>
+      
+      <mat-card style="margin-top: 20px; margin-bottom: 20px;">
+        <h3 class="margin-top: 10px" style="font-weight:bold" >Informe sobre Reportes de Inventario</h3>
+        <div class="login" style="margin-top: 10px; margin-bottom: 20px;">
+            <!--
+            Selecccionador de Reportes
+          -->
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo de reporte a realizar:</mat-label>
+            <mat-select>
+              <mat-option value="report">Reportes</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-      <!--
-      Calendario de Fechas para reportes
-      -->
-      <mat-form-field appearance="outline">
-        <mat-label>Ingresa un rango de fechas</mat-label>
-        <mat-date-range-input [rangePicker]="picker" [formGroup]="rangoDeFechas">
-          <input matStartDate placeholder="Fecha de Inicio" formControlName="firstDate">
-          <input matEndDate placeholder=" Fecha Final" formControlName="lastDate">
-        </mat-date-range-input>
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-date-range-picker #picker></mat-date-range-picker>
-      </mat-form-field>
+          <!--
+          Calendario de Fechas para reportes
+          -->
+          <mat-form-field appearance="outline">
+            <mat-label>Ingresa un rango de fechas</mat-label>
+            <mat-date-range-input [rangePicker]="picker" [formGroup]="rangoDeFechas">
+              <input matStartDate placeholder="Fecha de Inicio" formControlName="firstDate">
+              <input matEndDate placeholder=" Fecha Final" formControlName="lastDate">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
 
 
-      <button mat-raised-button color="primary" type="button" (click)="generar()"> Generar reporte </button>
-      <button mat-button color="warn" type="button" (click)="cancelar()"> Cancelar </button>
+          <button mat-raised-button color="primary" type="button" (click)="generar()"> Generar reporte </button>
+          <button mat-button color="warn" type="button" (click)="cancelar()"> Cancelar </button>
+        </div>
+      
+    </mat-card>
     </div>
   
 
