@@ -11,7 +11,7 @@
                 <h2 class="margin-top: 30px margin-bottom:20px" style="font-weight:bold" >Agregar producto</h2>
                 
                 <div class="example-container">
-                    <form [formGroup] = "formBuscar" (ngSubmit) = "buscarBarras()">
+                    <form [formGroup] = "formBuscar" (ngSubmit) = "buscarProducto()">
                         <mat-form-field appearance="fill" class = "ancho">
                             <mat-label>Nombre de Producto</mat-label>
                             <input matInput autocomplete="off" formControlName = "nameProduct">
@@ -26,7 +26,7 @@
                         </mat-form-field>
         
                         <div class="login">
-                            <button mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit" (click)="buscarBarras()"> Buscar </button>
+                            <button mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit" (click)="buscarProducto()"> Buscar </button>
                             <button mat-raised-button style="margin-left: 5px; margin-bottom: 10px;" color="primary" type="button" [disabled]="isDisabled" (click)="venta()"> Agregar producto </button>
                             <button mat-button style="margin-left: 10px;" color="warn" type="button" (click)="venta()"> Cancelar </button>
                         

@@ -33,4 +33,8 @@ export class VentaService {
     return this.http.get(`${this.url}getProductoBarras.php?codigoBarra=${codigoBarra}`);
   }
 
+  getProductoNombre(nombre:String){
+    return this.http.get(`${this.url}getProductoNombre.php?nombre=${nombre}`);
+  }
+
 }
