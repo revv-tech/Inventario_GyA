@@ -28,4 +28,8 @@ export class ProductoService {
   updateProducto(producto){
     return this.http.post(`${this.url}updateProducto.php`, JSON.stringify(producto));
   }
+
+  getProductoByName(name:number){
+    return this.http.get(`${this.url}getProductoByName.php?name=${name}`);
+  }
 }
