@@ -25,6 +25,10 @@ export class VentaService {
     return this.http.get(`${this.url}getVenta.php?IDVenta=${IDVenta}`);
   }
 
+  getVentaByDate(fecha){
+    return this.http.get(`${this.url}getVentaByDate.php?fecha=${fecha}`);
+  }
+
   updateVenta(venta){
     return this.http.post(`${this.url}updateVenta.php`, JSON.stringify(venta));
   }
