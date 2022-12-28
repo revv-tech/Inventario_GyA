@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductoService } from 'src/app/services/producto.service';
+import { VentaService } from 'src/app/services/venta.service';
 import { Product } from '../product/product.component';
 import { ThemePalette } from '@angular/material/core';
 import { lastValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { VentaService } from 'src/app/services/venta.service';
-
+import { ThisReceiver } from '@angular/compiler';
 
 
 @Component({
@@ -16,6 +17,29 @@ import { VentaService } from 'src/app/services/venta.service';
   styleUrls: ['./charges.component.css']
 })
 export class ChargesComponent {
+  carrito: Product[] = [];
+  products = null;
+  product = {
+    IDProducto: null,
+    cantidad: null,
+    codigoBarra: null,
+    codigoCabys: null,
+    iva: null,
+    nombre: null,
+    precio: null,
+    IDVenta: null,
+    IDBodega: null
+  };
+  ventas = null;
+  venta = {
+    IDVenta: null,
+    fecha: null,
+    descuento: null,
+    cantidad: null,
+    monto: null,
+    metodo: null,
+    IDInventario: null
+  };
   // Formulario de Busqueda
   formBuscar: FormGroup
   // Formulario de Venta
@@ -64,21 +88,60 @@ export class ChargesComponent {
   ngOnInit() {}
   venta(){}
 
+  async getVentaByDate(fecha){
+    const data$ = this.ventaService.getVentaByDate(fecha);
+    const data = await lastValueFrom(data$);
+    this.venta = data[0];
+  }
+  async getVenta(IDVenta){
+    const data$ = this.ventaService.getVenta(IDVenta);
+    const data = await lastValueFrom(data$);
+  }
+    this.venta = data[0];
+  async updateVenta(){
+    const data$ = this.ventaService.updateVenta(this.venta);
+    const data = await lastValueFrom(data$);
+  }
 
+
+  async deleteVenta(IDVenta){
+    const data$ = this.ventaService.deleteVenta(IDVenta);
+    const data = await lastValueFrom(data$);
+
+  }
+  async addVenta(){
+    const data$ = this.ventaService.addVenta(this.venta);
+    const data = await lastValueFrom(data$);
+  }
+  
+  async getAllVentas() {
+    const data$ = this.ventaService.getAllVentas(); 
+    this.ventas = data;
+    const data = await lastValueFrom(data$);
+  }
+
+  async updateProducto(){
+    const data$ = this.productService.updateProducto(this.product);
+    const data = await lastValueFrom(data$);
+  }
+
+  async getProductoByID(IDProducto){
+    const data$ = this.productService.getProducto(IDProducto);
+    const data = await lastValueFrom(data$);
+    this.product = data[0];
+  }
 
   async buscarProducto(){
     // Obtenemos valores del formularioS
     const name = this.formBuscar.value.nameProduct;
     const barCode = this.formBuscar.value.codeProduct;
-    const quantity = this.formBuscar.value.units;
-    // Asignamos valores al objeto producto
     this.product.cantidad = quantity;
+    // Asignamos valores al objeto producto
+    const quantity = this.formBuscar.value.units;
     this.product.codigoBarra = barCode;
     this.product.nombre = name;
     this.product.IDVenta = 'NULL';
     // consulta SQL
-
-  
 
     if (barCode){
       await this.getProductoBarras(barCode);    
@@ -95,16 +158,11 @@ export class ChargesComponent {
           verticalPosition: 'bottom'
         })      
     }
-    
-    await this.setElementDataSearch();
-    
   }
-
-  async getProductoBarras(codigoBarra){
-    const data$ = this.ventaService.getProductoBarras(codigoBarra);
-    const data = await lastValueFrom(data$);
     this.products = data;
-  }
+    const data = await lastValueFrom(data$);
+    const data$ = this.ventaService.getProductoBarras(codigoBarra);
+  async getProductoBarras(codigoBarra){
 
   async getProductoNombre(nombre){
     
@@ -112,7 +170,6 @@ export class ChargesComponent {
     const data = await lastValueFrom(data$);
     this.products = data;
   }
-
   async setElementDataSearch(){
     let tempData: Product[] = [];
     for (let e in this.products) {
@@ -121,7 +178,6 @@ export class ChargesComponent {
     this.dataSourceSearch = new MatTableDataSource(tempData);
     this.formBuscar.reset();
   }
-
   dummy(){
 
         //Alerta de feedback

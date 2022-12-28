@@ -2,3 +2,99 @@
     <span class="example-spacer" ></span>
     <span class="margin-top: 20px margin-bottom:20px" style="font-weight:lighter" >Gestión de Usuarios</span>
 </mat-toolbar>
+
+
+<!--
+    Formulario de Agregar usuario
+-->
+<mat-card style="margin-top: 20px; margin-bottom: 20px;">
+    <div class ="body">
+        <div class="login">
+            
+            <img src="./assets/images/user_2.png" width="30%" style="margin-bottom: 20px;">
+            <mat-card style="margin-top: 5px; margin-bottom: 20px;">
+                <h2 style="margin-top: 20px" style="font-weight:bold" >Agregar usuario</h2>
+                <form [formGroup] = "form" option="isEditar" style="margin-bottom: 20px;">
+                    <div class="example-container">
+                        <mat-form-field appearance="fill" class = "ancho">
+                            <mat-label>Nombre de usuario</mat-label>
+                                <input matInput autocomplete="off" formControlName = "user">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class = "ancho">
+                            <mat-label>Contraseña</mat-label>
+                                <input type="password" matInput autocomplete="off" formControlName = "password">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class = "ancho">
+                            <mat-label>Confirmar Contraseña</mat-label>
+                                <input type="password" matInput autocomplete="off" formControlName = "passwordConfirm">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class = "ancho">
+                            <mat-label>Inventario</mat-label>
+                                <input matInput autocomplete="off" formControlName = "IDInventory">
+                        </mat-form-field>
+
+
+                        <h3 style="margin-top: 20px" color="primary" style="font-weight:bold">¿El usuario es administrador?</h3>
+                        <mat-slide-toggle style="margin-bottom: 20px" formControlName = "userType"></mat-slide-toggle>
+                        
+                        <div class="example-container">
+                            <button  mat-raised-button color="primary" type="submit"  [disabled]="isEditar" (click)="confirmar('agregar')"> Agregar </button>
+                            <button mat-raised-button color="primary" type="button" [disabled]="!isEditar" (click)="confirmar('editar')"> Editar </button>
+                            <button mat-button color="warn" type="button" (click)="confirmar('cancelar')"> Cancelar </button>
+                        </div>
+                    </div>
+                    
+                </form>
+            </mat-card>
+        </div>
+        
+     <!--
+            Lista de Productos
+        -->
+        
+        <div class="tableSettings ancho">
+            <h2 style="margin-top: 20px" style="font-weight:bold" >Lista de usuarios registrados</h2>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="text-align: right;">
+                
+
+                <!-- Id Column -->
+                <ng-container matColumnDef="ID Usuario">
+                <th mat-header-cell *matHeaderCellDef> No. </th>
+                <td mat-cell *matCellDef="let element"> {{element?.IDUser}} </td>
+                </ng-container>
+            
+                <!-- Name Column -->
+                <ng-container matColumnDef="Usuario">
+                <th mat-header-cell *matHeaderCellDef> Nombre de Usuario </th>
+                <td mat-cell *matCellDef="let element"> {{element?.user}} </td>
+                </ng-container>
+            
+                <!-- Type Column -->
+                <ng-container matColumnDef="Tipo de Usuario">
+                <th mat-header-cell *matHeaderCellDef> Tipo de Usuario </th>
+                <td mat-cell *matCellDef="let element"> {{element?.userType}} </td>
+                </ng-container>
+        
+                <!-- Actions -->
+                <ng-container matColumnDef="Actions">
+                    <th mat-header-cell *matHeaderCellDef>  </th>
+                    <td mat-cell *matCellDef="let element" style="text-align: right;"> 
+                        <a class="pointer" (click) = "cargarUsuario(element)" style="color:#1f516f" matTooltip="Editar usuario">
+                            <mat-icon>
+                                edit
+                            </mat-icon>
+                        </a>
+                        <a class="pointer" (click) = "eliminar(element.IDProducto)" style="color:red" matTooltip="Eliminar usuario">
+                            <mat-icon>
+                                delete
+                            </mat-icon>
+                        </a>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+    </div>
+<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Productos por página"></mat-paginator>
+  </mat-card>

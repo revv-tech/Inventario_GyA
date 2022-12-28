@@ -104,7 +104,8 @@ export class ProductComponent {
 
   async agregar(){
     // Obtenemos valores del formulario
-    const name = this.form.value.nameProduct;
+    var name = this.form.value.nameProduct;
+    name = String(name).toLowerCase();
     const barCode = this.form.value.barCode;
     const cabyCode = this.form.value.cabyCode;
     const price = this.form.value.price;
@@ -139,7 +140,8 @@ export class ProductComponent {
 
   async editar(){
     // Obtenemos valores del formularioS
-    const name = this.form.value.nameProduct;
+    var name = this.form.value.nameProduct;
+    name = String(name).toLowerCase();
     const barCode = this.form.value.barCode;
     const cabyCode = this.form.value.cabyCode;
     const price = this.form.value.price;

@@ -11,24 +11,24 @@
                 <h2 class="margin-top: 30px margin-bottom:20px" style="font-weight:bold" >Buscar Producto</h2>
                 
                 <div class="example-container">
-                    <form [formGroup] = "formBuscar" (ngSubmit) = "buscarProducto()">
+                    <form [formGroup] = "formBuscar">
                         <mat-form-field appearance="fill" class = "ancho">
                             <mat-label>Nombre de Producto</mat-label>
-                            <input matInput autocomplete="off" formControlName = "nameProduct">
+                            <input matInput autocomplete="off" formControlName = "nameProduct" id="nameProduct">
                         </mat-form-field>
                         <mat-form-field appearance="fill" class = "ancho">
                             <mat-label>Código de Producto</mat-label>
-                            <input matInput autocomplete="off" formControlName = "codeProduct">
+                            <input matInput autocomplete="off" formControlName = "codeProduct" id="codeProduct">
                         </mat-form-field>
                         <mat-form-field appearance="fill" class = "ancho">
                             <mat-label>Cantidad de Unidades</mat-label>
-                            <input matInput autocomplete="off" formControlName = "units">
+                            <input matInput autocomplete="off" formControlName = "units" id="units">
                         </mat-form-field>
         
                         <div class="login">
-                            <button mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit" (click)="buscarProducto()"> Buscar </button>
-                            <button mat-raised-button style="margin-left: 5px; margin-bottom: 10px;" color="primary" type="button" [disabled]="isDisabled" (click)="venta()"> Agregar producto </button>
-                            <button mat-button style="margin-left: 10px;" color="warn" type="button" (click)="venta()"> Cancelar </button>
+                            <button  mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit"  [disabled]="isDisabled" (click)="buscarProducto()"> Buscar </button>
+                            <button mat-raised-button style="margin-left: 5px; margin-bottom: 10px;" color="primary" type="button" [disabled]="isDisabled" (click)="agregarAlCarrito()"> Agregar producto </button>
+                            <button mat-button style="margin-left: 10px;" color="warn" type="button" (click)="cancelar()"> Cancelar </button>
                         
                         </div>
                         
@@ -129,7 +129,7 @@
                 <h2 class="margin-top: 20px margin-bottom:20px" style="font-weight:bold" >Información sobre la venta:</h2>
                 
                 <div class="example-container">
-                    <form [formGroup] = "formVenta" (ngSubmit) = "dummy()">
+                    <form [formGroup] = "formVenta" (ngSubmit) = "buscarProducto()">
                         <h3>Descuentos totales</h3>
                         <mat-form-field appearance="fill" class = "ancho">
                             <input matInput autocomplete="off" formControlName = "discount">
@@ -141,11 +141,11 @@
 
                         <h3>Subtotal</h3>
                         <mat-form-field appearance="fill" class = "ancho" >
-                            <input matInput autocomplete="off" formControlName = "total">
+                            <input matInput autocomplete="off" formControlName = "subtotal">
                         </mat-form-field>
                         <h2 style="font-weight:bold" >Total</h2>
                         <mat-form-field appearance="fill" class = "ancho">
-                            <input matInput autocomplete="off" formControlName = "subtotal">
+                            <input matInput autocomplete="off" formControlName = "total">
                         </mat-form-field>
                         <div class="login" style="margin-bottom:20px">
                             <h3 class="example-h2">¿Desea generar factura?</h3>
@@ -158,8 +158,8 @@
                         </div>
                         
                         
-                        <button  mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit"  [disabled]="isDisabled" (click)="venta()"> Confirmar compra </button>
-                        <button mat-button style="margin-left: 10px;" color="warn" type="button" (click)="venta()"> Cancelar compra </button>
+                        <button  mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit"  [disabled]="isDisabled" (click)="agregarVenta()"> Confirmar compra </button>
+                        <button mat-button style="margin-left: 10px;" color="warn" type="button" (click)="resetPage()"> Cancelar compra </button>
                         
                     </form> 
                 </div>
