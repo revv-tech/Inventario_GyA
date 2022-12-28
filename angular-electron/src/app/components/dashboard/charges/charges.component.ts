@@ -66,21 +66,36 @@ export class ChargesComponent {
 
 
 
-  async buscarBarras(){
+  async buscarProducto(){
     // Obtenemos valores del formularioS
     const name = this.formBuscar.value.nameProduct;
     const barCode = this.formBuscar.value.codeProduct;
     const quantity = this.formBuscar.value.units;
-    console.log(name)
-    console.log(barCode)
-    console.log(quantity)
     // Asignamos valores al objeto producto
     this.product.cantidad = quantity;
     this.product.codigoBarra = barCode;
     this.product.nombre = name;
     this.product.IDVenta = 'NULL';
     // consulta SQL
-    await this.getProductoBarras(barCode);
+
+  
+
+    if (barCode){
+      await this.getProductoBarras(barCode);    
+    }
+    
+    else if (name){
+      await this.getProductoNombre(name);
+    }
+    else{
+        //Alerta de feedback
+        this._snackBar.open("Debe insertar dato de búsqueda",'',{
+          duration: 1500,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        })      
+    }
+    
     await this.setElementDataSearch();
     
   }
@@ -91,12 +106,18 @@ export class ChargesComponent {
     this.products = data;
   }
 
+  async getProductoNombre(nombre){
+    
+    const data$ = this.ventaService.getProductoNombre(nombre);
+    const data = await lastValueFrom(data$);
+    this.products = data;
+  }
+
   async setElementDataSearch(){
     let tempData: Product[] = [];
     for (let e in this.products) {
       tempData.push(this.products[e]);
     }
-    console.log(this.products)
     this.dataSourceSearch = new MatTableDataSource(tempData);
     this.formBuscar.reset();
   }
@@ -110,4 +131,5 @@ export class ChargesComponent {
           verticalPosition: 'bottom'
         })
   }
+
 }
