@@ -119,7 +119,7 @@ export class ChargesComponent {
     // Obtenemos valores del formularioS
     const name = this.formBuscar.value.nameProduct;
     const barCode = this.formBuscar.value.codeProduct;
-    this.product.cantidad = quantity;
+    
     // Asignamos valores al objeto producto
     const quantity = this.formBuscar.value.units;
     this.product.codigoBarra = barCode;
@@ -142,18 +142,22 @@ export class ChargesComponent {
           verticalPosition: 'bottom'
         })      
     }
-  }
-    this.products = data;
-    const data = await lastValueFrom(data$);
-    const data$ = this.ventaService.getProductoBarras(codigoBarra);
-  async getProductoBarras(codigoBarra){
 
-  async getProductoNombre(nombre){
+}
+    async getProductoBarras(codigoBarra){
+      const data$ = this.ventaService.getProductoBarras(codigoBarra);
+      const data = await lastValueFrom(data$);
+      this.products = data;
+    }
+  
+
+    async getProductoNombre(nombre){
     
-    const data$ = this.ventaService.getProductoNombre(nombre);
-    const data = await lastValueFrom(data$);
-    this.products = data;
-  }
+      const data$ = this.ventaService.getProductoNombre(nombre);
+      const data = await lastValueFrom(data$);
+      this.products = data;
+    }
+
   async setElementDataSearch(){
     let tempData: Product[] = [];
     for (let e in this.products) {
@@ -162,6 +166,7 @@ export class ChargesComponent {
     this.dataSourceSearch = new MatTableDataSource(tempData);
     this.formBuscar.reset();
   }
+
   dummy(){
 
         //Alerta de feedback
