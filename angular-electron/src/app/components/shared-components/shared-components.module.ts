@@ -46,7 +46,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatGridListModule,
     MatOptionModule,
     MatSelectModule,
-    MatChipsModule
+    MatChipsModule,
     MatTabsModule
   ],
   exports: [
@@ -69,7 +69,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatGridListModule,
     MatOptionModule,
     MatSelectModule,
-    MatChipsModule
+    MatChipsModule,
     MatTabsModule
   ]
 })
