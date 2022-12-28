@@ -32,7 +32,6 @@ export class ChargesComponent {
   ventas = null;
   venta = {
     IDVenta: null,
-    factura: null,
     fecha: null,
     descuento: null,
     cantidad: null,
@@ -90,6 +89,11 @@ export class ChargesComponent {
     this.product = data[0];
   }
 
+  async updateProducto(){
+    const data$ = this.productService.updateProducto(this.product);
+    const data = await lastValueFrom(data$);
+  }
+
   async getAllVentas() {
     const data$ = this.ventaService.getAllVentas(); 
     const data = await lastValueFrom(data$);
@@ -116,6 +120,12 @@ export class ChargesComponent {
     const data = await lastValueFrom(data$);
     this.venta = data[0];
   }
+
+  async getVentaByDate(fecha){
+    const data$ = this.ventaService.getVentaByDate(fecha);
+    const data = await lastValueFrom(data$);
+    this.venta = data[0];
+  }
   
   async buscarProducto(){
     const name = this.formBuscar.value.nameProduct;
@@ -127,10 +137,10 @@ export class ChargesComponent {
     }
     console.log(this.product);
     // EL SETVALUE TIRA ERROR
-    this.formBuscar.setValue({
-      nameProduct: this.product.nombre,
-      codeProduct: this.product.codigoBarra
-    });
+    // this.formBuscar.setValue({
+    //   nameProduct: this.product.nombre,
+    //   codeProduct: this.product.codigoBarra
+    // });
   }
 
   async agregarAlCarrito(){
@@ -161,9 +171,49 @@ export class ChargesComponent {
     this.formBuscar.reset();
   }
 
+  resetPage(){
+    this.setProductOnNull();
+    this.formBuscar.reset();
+    this.formVenta.reset();
+    const temparrito: Product[] = [];
+    this.carrito = temparrito;
+    this.setElementData();
+  }
+
   eliminar(element){
     delete(this.carrito[this.carrito.indexOf(element)]);
     this.setElementData();
+  }
+
+  async agregarVenta(){
+    this.venta.IDInventario = 2;
+    this.venta.cantidad = 0;
+    for(var e in this.carrito){
+      this.venta.cantidad += this.carrito[e].cantidad;
+      // Descontamos los productos disponibles del inventario
+      await this.getProductoByID(this.carrito[e].IDProducto);
+      this.product.cantidad = this.product.cantidad  - this.carrito[e].cantidad;
+      await this.updateProducto();
+    }
+    this.venta.descuento = this.formVenta.value.discount;
+    this.venta.fecha = new Date();
+    this.venta.metodo = "EFECTIVO";
+    this.venta.monto = this.formVenta.value.total;
+    await this.addVenta();
+    this.resetPage();
+    console.log("VENTA AGREGADA");
+  }
+
+  setProductOnNull(){
+    this.product.IDBodega = null;
+    this.product.IDProducto = null;
+    this.product.IDVenta = null;
+    this.product.cantidad = null;
+    this.product.codigoBarra = null;
+    this.product.codigoCabys = null;
+    this.product.iva = null;
+    this.product.nombre = null;
+    this.product.precio = null;
   }
 
   vender(){}
