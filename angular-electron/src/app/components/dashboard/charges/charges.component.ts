@@ -7,7 +7,6 @@ import { Product } from '../product/product.component';
 import { ThemePalette } from '@angular/material/core';
 import { lastValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
-import { VentaService } from 'src/app/services/venta.service';
 import { ThisReceiver } from '@angular/compiler';
 
 
@@ -18,28 +17,7 @@ import { ThisReceiver } from '@angular/compiler';
 })
 export class ChargesComponent {
   carrito: Product[] = [];
-  products = null;
-  product = {
-    IDProducto: null,
-    cantidad: null,
-    codigoBarra: null,
-    codigoCabys: null,
-    iva: null,
-    nombre: null,
-    precio: null,
-    IDVenta: null,
-    IDBodega: null
-  };
-  ventas = null;
-  venta = {
-    IDVenta: null,
-    fecha: null,
-    descuento: null,
-    cantidad: null,
-    monto: null,
-    metodo: null,
-    IDInventario: null
-  };
+  
   // Formulario de Busqueda
   formBuscar: FormGroup
   // Formulario de Venta
@@ -93,16 +71,18 @@ export class ChargesComponent {
     const data = await lastValueFrom(data$);
     this.venta = data[0];
   }
+
   async getVenta(IDVenta){
     const data$ = this.ventaService.getVenta(IDVenta);
     const data = await lastValueFrom(data$);
-  }
     this.venta = data[0];
+  }
+    
   async updateVenta(){
     const data$ = this.ventaService.updateVenta(this.venta);
     const data = await lastValueFrom(data$);
+    
   }
-
 
   async deleteVenta(IDVenta){
     const data$ = this.ventaService.deleteVenta(IDVenta);
@@ -114,12 +94,15 @@ export class ChargesComponent {
     const data = await lastValueFrom(data$);
   }
   
+  /*
   async getAllVentas() {
     const data$ = this.ventaService.getAllVentas(); 
     this.ventas = data;
     const data = await lastValueFrom(data$);
   }
+  */
 
+  /*
   async updateProducto(){
     const data$ = this.productService.updateProducto(this.product);
     const data = await lastValueFrom(data$);
@@ -130,6 +113,7 @@ export class ChargesComponent {
     const data = await lastValueFrom(data$);
     this.product = data[0];
   }
+  */
 
   async buscarProducto(){
     // Obtenemos valores del formularioS
