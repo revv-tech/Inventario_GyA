@@ -40,7 +40,7 @@ export class ProductComponent {
     IDVenta: null,
     IDBodega: null
   };
-  displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad', 'Actions'];
+  displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad','barras', 'cabys', 'Actions'];
   dataSource: any;
   isEditar: boolean;
   fechaCaducidad: Date | null;

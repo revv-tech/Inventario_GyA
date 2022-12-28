@@ -32,4 +32,13 @@ export class VentaService {
   updateVenta(venta){
     return this.http.post(`${this.url}updateVenta.php`, JSON.stringify(venta));
   }
+
+  getProductoBarras(codigoBarra:number){
+    return this.http.get(`${this.url}getProductoBarras.php?codigoBarra=${codigoBarra}`);
+  }
+
+  getProductoNombre(nombre:String){
+    return this.http.get(`${this.url}getProductoNombre.php?nombre=${nombre}`);
+  }
+
 }

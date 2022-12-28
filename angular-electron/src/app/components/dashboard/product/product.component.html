@@ -85,6 +85,18 @@
                 <td mat-cell *matCellDef="let element"> {{element?.cantidad}} </td>
                 </ng-container>
 
+                <!-- BarCode Column -->
+                <ng-container matColumnDef="barras">
+                    <th mat-header-cell *matHeaderCellDef> Código Barras </th>
+                    <td mat-cell *matCellDef="let element"> {{element?.codigoBarra}} </td>
+                    </ng-container>
+
+                <!-- CABYS Column -->
+                <ng-container matColumnDef="cabys">
+                    <th mat-header-cell *matHeaderCellDef> CABYS</th>
+                    <td mat-cell *matCellDef="let element"> {{element?.codigoCabys}} </td>
+                    </ng-container>
+
                 <!-- Actions -->
                 <ng-container matColumnDef="Actions">
                     <th mat-header-cell *matHeaderCellDef>  </th>

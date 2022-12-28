@@ -7,6 +7,7 @@ import { Product } from '../product/product.component';
 import { ThemePalette } from '@angular/material/core';
 import { lastValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
+import { VentaService } from 'src/app/services/venta.service';
 import { ThisReceiver } from '@angular/compiler';
 
 
@@ -44,17 +45,32 @@ export class ChargesComponent {
   // Formulario de Venta
   formVenta: FormGroup
   isDisabled: true;
-  dataSource: any;
+  dataSourceSearch: any;
+  dataSourceCart: any;
   inputDisabled: true;
   // Table
   productsList: Product[];
-  displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad', 'Actions'];
+  displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad'];
+  displayedColumnsSearch: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad','barras', 'cabys'];
   // Toggle de Factura
   color: ThemePalette = 'accent';
   checkedFactura = false;
   disabledFactura = false;
+  // Porductos a mostrar
+  products = null;
+  product = {
+    IDProducto: null,
+    cantidad: null,
+    codigoBarra: null,
+    codigoCabys: null,
+    iva: null,
+    nombre: null,
+    precio: null,
+    IDVenta: null,
+    IDBodega: null
+  };
 
-  constructor(private fb: FormBuilder,private fb2: FormBuilder, private productService: ProductoService, private ventaService: VentaService, private _snackBar: MatSnackBar){
+  constructor(private fb: FormBuilder,private fb2: FormBuilder, private ventaService: VentaService, private _snackBar: MatSnackBar){
     
     this.formBuscar = this.fb.group({
       nameProduct : [''],
@@ -70,11 +86,43 @@ export class ChargesComponent {
   }
 
   ngOnInit() {}
+  venta(){}
 
-  async getAllProductos() {
-    const data$ = this.productService.getAllProductos(); 
+  async getVentaByDate(fecha){
+    const data$ = this.ventaService.getVentaByDate(fecha);
     const data = await lastValueFrom(data$);
-    this.products = data;
+    this.venta = data[0];
+  }
+  async getVenta(IDVenta){
+    const data$ = this.ventaService.getVenta(IDVenta);
+    const data = await lastValueFrom(data$);
+  }
+    this.venta = data[0];
+  async updateVenta(){
+    const data$ = this.ventaService.updateVenta(this.venta);
+    const data = await lastValueFrom(data$);
+  }
+
+
+  async deleteVenta(IDVenta){
+    const data$ = this.ventaService.deleteVenta(IDVenta);
+    const data = await lastValueFrom(data$);
+
+  }
+  async addVenta(){
+    const data$ = this.ventaService.addVenta(this.venta);
+    const data = await lastValueFrom(data$);
+  }
+  
+  async getAllVentas() {
+    const data$ = this.ventaService.getAllVentas(); 
+    this.ventas = data;
+    const data = await lastValueFrom(data$);
+  }
+
+  async updateProducto(){
+    const data$ = this.productService.updateProducto(this.product);
+    const data = await lastValueFrom(data$);
   }
 
   async getProductoByID(IDProducto){
@@ -83,139 +131,61 @@ export class ChargesComponent {
     this.product = data[0];
   }
 
-  async getProductoByName(name){
-    const data$ = this.productService.getProductoByName(name);
-    const data = await lastValueFrom(data$);
-    this.product = data[0];
-  }
-
-  async updateProducto(){
-    const data$ = this.productService.updateProducto(this.product);
-    const data = await lastValueFrom(data$);
-  }
-
-  async getAllVentas() {
-    const data$ = this.ventaService.getAllVentas(); 
-    const data = await lastValueFrom(data$);
-    this.ventas = data;
-  }
-
-  async addVenta(){
-    const data$ = this.ventaService.addVenta(this.venta);
-    const data = await lastValueFrom(data$);
-  }
-  
-  async deleteVenta(IDVenta){
-    const data$ = this.ventaService.deleteVenta(IDVenta);
-    const data = await lastValueFrom(data$);
-  }
-
-  async updateVenta(){
-    const data$ = this.ventaService.updateVenta(this.venta);
-    const data = await lastValueFrom(data$);
-  }
-
-  async getVenta(IDVenta){
-    const data$ = this.ventaService.getVenta(IDVenta);
-    const data = await lastValueFrom(data$);
-    this.venta = data[0];
-  }
-
-  async getVentaByDate(fecha){
-    const data$ = this.ventaService.getVentaByDate(fecha);
-    const data = await lastValueFrom(data$);
-    this.venta = data[0];
-  }
-  
   async buscarProducto(){
+    // Obtenemos valores del formularioS
     const name = this.formBuscar.value.nameProduct;
-    const id = this.formBuscar.value.codeProduct;
-    if(id){
-      await this.getProductoByID(id);
-    } else if (name){
-      await this.getProductoByName(name);
+    const barCode = this.formBuscar.value.codeProduct;
+    this.product.cantidad = quantity;
+    // Asignamos valores al objeto producto
+    const quantity = this.formBuscar.value.units;
+    this.product.codigoBarra = barCode;
+    this.product.nombre = name;
+    this.product.IDVenta = 'NULL';
+    // consulta SQL
+
+    if (barCode){
+      await this.getProductoBarras(barCode);    
     }
-    console.log(this.product);
-    // EL SETVALUE TIRA ERROR
-    // this.formBuscar.setValue({
-    //   nameProduct: this.product.nombre,
-    //   codeProduct: this.product.codigoBarra
-    // });
+    
+    else if (name){
+      await this.getProductoNombre(name);
+    }
+    else{
+        //Alerta de feedback
+        this._snackBar.open("Debe insertar dato de búsqueda",'',{
+          duration: 1500,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        })      
+    }
   }
+    this.products = data;
+    const data = await lastValueFrom(data$);
+    const data$ = this.ventaService.getProductoBarras(codigoBarra);
+  async getProductoBarras(codigoBarra){
 
-  async agregarAlCarrito(){
-    this.product.cantidad = this.formBuscar.value.units;
-    this.carrito.push(this.product);
-    this.setElementData();
-    this.formBuscar.reset();
+  async getProductoNombre(nombre){
+    
+    const data$ = this.ventaService.getProductoNombre(nombre);
+    const data = await lastValueFrom(data$);
+    this.products = data;
   }
-
-  setElementData(){
-    var total = 0;
+  async setElementDataSearch(){
     let tempData: Product[] = [];
-    for (let e in this.carrito) {
-      tempData.push(this.carrito[e]);
-      total += this.carrito[e].cantidad * this.carrito[e].precio;
+    for (let e in this.products) {
+      tempData.push(this.products[e]);
     }
-    this.dataSource = new MatTableDataSource(tempData);
-
-    this.formVenta.setValue({
-      discount: 0,
-      tax: 0.13,
-      total: total,
-      subtotal: total
-    });
-  }
-
-  cancelar(){
+    this.dataSourceSearch = new MatTableDataSource(tempData);
     this.formBuscar.reset();
   }
+  dummy(){
 
-  resetPage(){
-    this.setProductOnNull();
-    this.formBuscar.reset();
-    this.formVenta.reset();
-    const temparrito: Product[] = [];
-    this.carrito = temparrito;
-    this.setElementData();
+        //Alerta de feedback
+        this._snackBar.open("Busqueda exitosa!",'',{
+          duration: 1500,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        })
   }
-
-  eliminar(element){
-    delete(this.carrito[this.carrito.indexOf(element)]);
-    this.setElementData();
-  }
-
-  async agregarVenta(){
-    this.venta.IDInventario = 2;
-    this.venta.cantidad = 0;
-    for(var e in this.carrito){
-      this.venta.cantidad += this.carrito[e].cantidad;
-      // Descontamos los productos disponibles del inventario
-      await this.getProductoByID(this.carrito[e].IDProducto);
-      this.product.cantidad = this.product.cantidad  - this.carrito[e].cantidad;
-      await this.updateProducto();
-    }
-    this.venta.descuento = this.formVenta.value.discount;
-    this.venta.fecha = new Date();
-    this.venta.metodo = "EFECTIVO";
-    this.venta.monto = this.formVenta.value.total;
-    await this.addVenta();
-    this.resetPage();
-    console.log("VENTA AGREGADA");
-  }
-
-  setProductOnNull(){
-    this.product.IDBodega = null;
-    this.product.IDProducto = null;
-    this.product.IDVenta = null;
-    this.product.cantidad = null;
-    this.product.codigoBarra = null;
-    this.product.codigoCabys = null;
-    this.product.iva = null;
-    this.product.nombre = null;
-    this.product.precio = null;
-  }
-
-  vender(){}
 
 }
