@@ -45,7 +45,7 @@ export class ProductComponent {
   isEditar: boolean;
   fechaCaducidad: Date | null;
 
-  constructor( private fb: FormBuilder, private productService: ProductoService, private router: Router, private _snackBar: MatSnackBar){
+  constructor( private fb: FormBuilder, private productService: ProductoService, private _snackBar: MatSnackBar){
     this.form = this.fb.group({
       nameProduct : [''],
       barCode : [''],
@@ -163,8 +163,6 @@ export class ProductComponent {
       horizontalPosition: 'center',
       verticalPosition: 'bottom'
     })
-
-    
   }
 
   cargarProducto(element){

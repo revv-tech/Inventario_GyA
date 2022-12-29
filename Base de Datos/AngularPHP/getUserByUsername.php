@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 require("./DBConnection.php");
 $con = returnConection();
 
-$registro=mysqli_query($con ,"select * from usuario where usuario='$_GET[usuario]' and contraseña='$_GET[contraseña]';");
+$registro=mysqli_query($con ,"select *  from usuario where usuario = '$_GET[usuario]'");
 if($reg=mysqli_fetch_array($registro)){
     $vec[]=$reg;
 }

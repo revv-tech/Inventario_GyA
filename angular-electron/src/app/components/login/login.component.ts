@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
+import * as CryptoJS from 'crypto-js'; 
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class LoginComponent {
     IDInventario: null
   };
   
-  form: FormGroup
+  key: String;
+  form: FormGroup;
 
   constructor( private fb: FormBuilder, private userService: UserService, private router: Router){
   
@@ -33,6 +35,7 @@ export class LoginComponent {
   }
 
   ngOnInit() : void{
+    this.key = "q]a/%E62p7N8P7z#B8H%T2$ywBeL=t";
   }
 
   async getAllUsers() {
@@ -62,18 +65,29 @@ export class LoginComponent {
     this.user = data[0];
   }
 
-  async loginUser(usuario, contraseña){
-    const data$ = this.userService.loginUser(usuario, contraseña);
+  async getUserByUsername(username){
+    const data$ = this.userService.getUserByUsername(username);
     const data = await lastValueFrom(data$);
     this.user = data[0];
-    this.userVerified = true;
+  }
+
+  async loginUser(usuario, insertedPassword){
+    await this.getUserByUsername(usuario);
+    console.log(this.user);
+    const desPassword = CryptoJS.AES.decrypt(this.user.contraseña.trim(), this.key.trim()).toString(CryptoJS.enc.Utf8);
+    console.log(insertedPassword);
+    console.log(desPassword);
+    if(insertedPassword === desPassword){
+      this.userVerified = true;
+    } else {
+      this.userVerified = false;
+    }
   }
 
   async ingresar(){
     const username = this.form.value.user;
     const password = this.form.value.password;
     await this.loginUser(username, password);
-
     // Get user to login
     if (this.userVerified){
       this.router.navigate(['dashboard'])
