@@ -4,7 +4,9 @@
         <button mat-flat-button color="primary" routerLink="/dashboard/product">Bodega</button>
         <button mat-flat-button color="primary" routerLink="/dashboard/charge">Ventas</button>
         <button mat-flat-button color="primary" routerLink="/dashboard/report">Reportes</button>
-        <button mat-flat-button color="primary" routerLink="/dashboard/user">Usuarios</button>
+        <div *ngIf="currentUser.tipoUsuario == 'ADMIN'">
+            <button mat-flat-button color="primary" routerLink="/dashboard/user">Usuarios</button>
+        </div>
         <button mat-flat-button color="primary" routerLink="/dashboard/profile">Editar mi Información</button>
 </mat-toolbar>
 

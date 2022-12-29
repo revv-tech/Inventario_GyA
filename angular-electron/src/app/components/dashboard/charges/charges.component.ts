@@ -7,6 +7,7 @@ import { ThemePalette } from '@angular/material/core';
 import { lastValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { VentaService } from 'src/app/services/venta.service';
+import { DataService } from 'src/app/services/data.service';
 
 
 
@@ -16,6 +17,7 @@ import { VentaService } from 'src/app/services/venta.service';
   styleUrls: ['./charges.component.css']
 })
 export class ChargesComponent {
+  currentUser: any;
   // Formulario de Busqueda
   formBuscar: FormGroup
   // Formulario de Venta
@@ -46,7 +48,7 @@ export class ChargesComponent {
     IDBodega: null
   };
 
-  constructor(private fb: FormBuilder,private fb2: FormBuilder, private ventaService: VentaService, private _snackBar: MatSnackBar){
+  constructor(private fb: FormBuilder,private fb2: FormBuilder, private ventaService: VentaService, private _snackBar: MatSnackBar, private data: DataService){
     
     this.formBuscar = this.fb.group({
       nameProduct : [''],
@@ -61,7 +63,10 @@ export class ChargesComponent {
     })
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.data.currentUser.subscribe(currentUser => this.currentUser = currentUser);
+  }
+  
   venta(){}
 
 
