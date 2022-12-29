@@ -44,11 +44,13 @@ export class ChargesComponent {
   // Formulario de Venta
   formVenta: FormGroup
   isDisabled: true;
-  dataSource: any;
+  dataSourceCart: any;
+  dataSourceSearch: any;
   inputDisabled: true;
   // Table
   productsList: Product[];
-  displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad', 'Actions'];
+  displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad'];
+  displayedColumnsSearch: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad', 'barras', 'cabys', 'Agregar'];
   // Toggle de Factura
   color: ThemePalette = 'accent';
   checkedFactura = false;
@@ -86,13 +88,13 @@ export class ChargesComponent {
   async getProductoBarras(codigoBarra){
     const data$ = this.productService.getProductoBarras(codigoBarra);
     const data = await lastValueFrom(data$);
-    this.product = data[0];
+    this.products = data;
   }
 
   async getProductoByName(name){
     const data$ = this.productService.getProductoByName(name);
     const data = await lastValueFrom(data$);
-    this.product = data[0];
+    this.products = data;
   }
 
   async updateProducto(){
@@ -132,24 +134,30 @@ export class ChargesComponent {
     const data = await lastValueFrom(data$);
     this.venta = data[0];
   }
-  
-  async buscarProducto(){
-    const name = this.formBuscar.value.nameProduct;
-    const codigoBarra = this.formBuscar.value.codeProduct;
-    if(codigoBarra){
-      await this.getProductoBarras(codigoBarra);
-    } else if (name){
-      await this.getProductoByName(name);
-    }
-    this.formBuscar.patchValue({
-      nameProduct: this.product.nombre,
-      codeProduct: this.product.codigoBarra
-    });
-  }
 
-  async agregarAlCarrito(){
-    this.product.cantidad = this.formBuscar.value.units;
-    this.carrito.push(this.product);
+  async agregarAlCarrito(element){
+    var product_temp = {
+      IDProducto: null,
+      cantidad: null,
+      codigoBarra: null,
+      codigoCabys: null,
+      iva: null,
+      nombre: null,
+      precio: null,
+      IDVenta: null,
+      IDBodega: null
+    }
+
+    const quantity = this.formBuscar.value.units;
+    product_temp.IDProducto = element.IDProducto;
+    product_temp.cantidad = quantity;
+    product_temp.codigoBarra = element.codigoBarra;
+    product_temp.codigoCabys = element.codigoCabys;
+    product_temp.iva = element.iva;
+    product_temp.nombre = element.nombre;
+    product_temp.precio = element.precio;
+
+    this.carrito.push(product_temp);
     this.setElementData();
     this.formBuscar.reset();
   }
@@ -161,7 +169,7 @@ export class ChargesComponent {
       tempData.push(this.carrito[e]);
       total += this.carrito[e].cantidad * this.carrito[e].precio;
     }
-    this.dataSource = new MatTableDataSource(tempData);
+    this.dataSourceCart = new MatTableDataSource(tempData);
 
     this.formVenta.setValue({
       discount: 0,
@@ -217,6 +225,45 @@ export class ChargesComponent {
     this.product.iva = null;
     this.product.nombre = null;
     this.product.precio = null;
+  }
+
+  async setElementDataSearch(){
+    let tempData: Product[] = [];
+    for (let e in this.products) {
+      tempData.push(this.products[e]);
+    }
+    this.dataSourceSearch = new MatTableDataSource(tempData);
+    this.formBuscar.reset();
+  }
+
+  async buscarProducto(){
+    // Obtenemos valores del formularioS
+    const name = this.formBuscar.value.nameProduct;
+    const barCode = this.formBuscar.value.codeProduct;
+    const quantity = this.formBuscar.value.units;
+    // Asignamos valores al objeto producto
+    this.product.cantidad = quantity;
+    this.product.codigoBarra = barCode;
+    this.product.nombre = name;
+    this.product.IDVenta = 'NULL';
+    // consulta SQL
+
+    if (barCode){
+      await this.getProductoBarras(barCode);
+    }
+
+    else if (name){
+      await this.getProductoByName(name);
+    }
+    else{
+        //Alerta de feedback
+        this._snackBar.open("Debe insertar dato de búsqueda",'',{
+          duration: 1500,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        })
+    }
+    await this.setElementDataSearch();
   }
 
 }

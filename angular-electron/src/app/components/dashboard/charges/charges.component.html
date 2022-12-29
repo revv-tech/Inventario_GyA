@@ -8,26 +8,25 @@
         <div class="login">
             <img src="./assets/images/trade.png" width="20%" style="margin-bottom: 20px;">
             <mat-card style="margin-top: 20px; margin-bottom: 20px; border: 55px;">
-                <h2 class="margin-top: 30px margin-bottom:20px" style="font-weight:bold" >Agregar producto</h2>
+                <h2 class="margin-top: 30px margin-bottom:20px" style="font-weight:bold" >Buscar Producto</h2>
                 
                 <div class="example-container">
                     <form [formGroup] = "formBuscar">
                         <mat-form-field appearance="fill" class = "ancho">
                             <mat-label>Nombre de Producto</mat-label>
-                            <input matInput autocomplete="off" formControlName = "nameProduct" id="nameProduct">
+                            <input matInput autocomplete="off" formControlName = "nameProduct">
                         </mat-form-field>
                         <mat-form-field appearance="fill" class = "ancho">
                             <mat-label>Código de Producto</mat-label>
-                            <input matInput autocomplete="off" formControlName = "codeProduct" id="codeProduct">
+                            <input matInput autocomplete="off" formControlName = "codeProduct">
                         </mat-form-field>
                         <mat-form-field appearance="fill" class = "ancho">
                             <mat-label>Cantidad de Unidades</mat-label>
-                            <input matInput autocomplete="off" formControlName = "units" id="units">
+                            <input matInput autocomplete="off" formControlName = "units">
                         </mat-form-field>
         
                         <div class="login">
-                            <button  mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit"  [disabled]="isDisabled" (click)="buscarProducto()"> Buscar </button>
-                            <button mat-raised-button style="margin-left: 5px; margin-bottom: 10px;" color="primary" type="button" [disabled]="isDisabled" (click)="agregarAlCarrito()"> Agregar producto </button>
+                            <button mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit" (click)="buscarProducto()"> Buscar </button>
                             <button mat-button style="margin-left: 10px;" color="warn" type="button" (click)="cancelar()"> Cancelar </button>
                         
                         </div>
@@ -38,10 +37,11 @@
         </div> 
 
         <div class="ancho" style="margin-left: 10px; margin-right: 10px;">
-            
-            <h2 style="font-weight:bold ce">Productos a cobrar: </h2>
-            
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="text-align: right;">
+
+            <!-- TAB where you can see the products in the cart -->
+            <mat-tab-group>
+                <mat-tab label="Carrito de Compras">  
+            <table mat-table [dataSource]="dataSourceCart" class="mat-elevation-z8" style="text-align: right;">
                 
 
                 <!-- Id Column -->
@@ -68,20 +68,70 @@
                 <td mat-cell *matCellDef="let element"> {{element?.cantidad}} </td>
                 </ng-container>
 
-                <!-- Actions -->
-                <ng-container matColumnDef="Actions">
-                    <th mat-header-cell *matHeaderCellDef>  </th>
-                    <td mat-cell *matCellDef="let element" style="text-align: right;"> 
-                        <a class="pointer" (click) = "eliminar(element)" style="color:red" matTooltip="Eliminar producto">
-                            <mat-icon>
-                                delete
-                            </mat-icon>
-                        </a>
-                    </td>
-                </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
+            </table>                    
+                </mat-tab>
+
+                <!-- TAB where you can search the products and see the detail -->
+                <mat-tab label="Buscador"> 
+                    <table mat-table [dataSource]="dataSourceSearch" class="mat-elevation-z8" style="text-align: right;">
+                
+
+                        <!-- Id Column -->
+                        <ng-container matColumnDef="IDProducto">
+                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.IDProducto}} </td>
+                        </ng-container>
+                    
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef> Nombre de Producto </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.nombre}} </td>
+                        </ng-container>
+                    
+                        <!-- Price Column -->
+                        <ng-container matColumnDef="precio">
+                        <th mat-header-cell *matHeaderCellDef> Precio </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.precio}} </td>
+                        </ng-container>
+                    
+                        <!-- Quantity Column -->
+                        <ng-container matColumnDef="cantidad">
+                        <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.cantidad}} </td>
+                        </ng-container>
+        
+                        <!-- BarCode Column -->
+                        <ng-container matColumnDef="barras">
+                            <th mat-header-cell *matHeaderCellDef> Código Barras </th>
+                            <td mat-cell *matCellDef="let element"> {{element?.codigoBarra}} </td>
+                            </ng-container>
+        
+                        <!-- CABYS Column -->
+                        <ng-container matColumnDef="cabys">
+                            <th mat-header-cell *matHeaderCellDef> CABYS</th>
+                            <td mat-cell *matCellDef="let element"> {{element?.codigoCabys}} </td>
+                            </ng-container>
+
+                        <ng-container matColumnDef="Agregar">
+                                <th mat-header-cell *matHeaderCellDef>  </th>
+                                <td mat-cell *matCellDef="let element" style="text-align: right;"> 
+                                    <a class="pointer" (click) = "agregarAlCarrito(element)" style="color:#1f516f" matTooltip="Agregar producto al carrito">
+                                        <mat-icon>
+                                            add_shopping_cart
+                                        </mat-icon>
+                                    </a>
+                                </td>
+                            </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsSearch"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsSearch;"></tr>
+                    </table>
+                </mat-tab>
+              </mat-tab-group>
+            
+
         </div>
         <div class="login">
             <mat-card style="margin-bottom: 20px;">
@@ -101,11 +151,11 @@
 
                         <h3>Subtotal</h3>
                         <mat-form-field appearance="fill" class = "ancho" >
-                            <input matInput autocomplete="off" formControlName = "subtotal">
+                            <input matInput autocomplete="off" formControlName = "total">
                         </mat-form-field>
                         <h2 style="font-weight:bold" >Total</h2>
                         <mat-form-field appearance="fill" class = "ancho">
-                            <input matInput autocomplete="off" formControlName = "total">
+                            <input matInput autocomplete="off" formControlName = "subtotal">
                         </mat-form-field>
                         <div class="login" style="margin-bottom:20px">
                             <h3 class="example-h2">¿Desea generar factura?</h3>
@@ -131,4 +181,3 @@
       
   
   </mat-card>
-  

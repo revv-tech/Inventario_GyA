@@ -33,7 +33,7 @@ export class ProductoService {
     return this.http.post(`${this.url}updateProducto.php`, JSON.stringify(producto));
   }
 
-  getProductoByName(name:number){
-    return this.http.get(`${this.url}getProductoByName.php?name=${name}`);
+  getProductoByName(nombre){
+    return this.http.get(`${this.url}getProductoByName.php?nombre=${nombre}`);
   }
 }
