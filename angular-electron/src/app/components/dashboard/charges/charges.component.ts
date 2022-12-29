@@ -27,13 +27,14 @@ export class ChargesComponent {
   // Table
   productsList: Product[];
   displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad'];
-  displayedColumnsSearch: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad','barras', 'cabys'];
+  displayedColumnsSearch: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad','barras', 'cabys', 'Agregar'];
   // Toggle de Factura
   color: ThemePalette = 'accent';
   checkedFactura = false;
   disabledFactura = false;
   // Porductos a mostrar
   products = null;
+  cart = [];
   product = {
     IDProducto: null,
     cantidad: null,
@@ -62,8 +63,35 @@ export class ChargesComponent {
   }
 
   ngOnInit() {}
-  venta(){}
+  agregarProductoCarrito(element){
+    // Creamos un objeto producto temporal
+    var product_temp = {
+      IDProducto: null,
+      cantidad: null,
+      codigoBarra: null,
+      codigoCabys: null,
+      iva: null,
+      nombre: null,
+      precio: null,
+      IDVenta: null,
+      IDBodega: null
+    }
 
+    const quantity = this.formBuscar.value.units;
+    product_temp.IDProducto = element.IDProducto;
+    product_temp.cantidad = quantity;
+    product_temp.codigoBarra = element.codigoBarra;
+    product_temp.codigoCabys = element.codigoCabys;
+    product_temp.iva = element.iva;
+    product_temp.nombre = element.nombre;
+    product_temp.precio = element.precio;
+
+    this.cart.push(product_temp)
+    
+    
+    this.dataSourceCart = new MatTableDataSource(this.cart);
+    this.formBuscar.reset();
+  }
 
 
   async buscarProducto(){
@@ -77,8 +105,6 @@ export class ChargesComponent {
     this.product.nombre = name;
     this.product.IDVenta = 'NULL';
     // consulta SQL
-
-  
 
     if (barCode){
       await this.getProductoBarras(barCode);    
@@ -95,9 +121,7 @@ export class ChargesComponent {
           verticalPosition: 'bottom'
         })      
     }
-    
     await this.setElementDataSearch();
-    
   }
 
   async getProductoBarras(codigoBarra){

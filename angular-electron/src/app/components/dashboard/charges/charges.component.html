@@ -27,8 +27,8 @@
         
                         <div class="login">
                             <button mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit" (click)="buscarProducto()"> Buscar </button>
-                            <button mat-raised-button style="margin-left: 5px; margin-bottom: 10px;" color="primary" type="button" [disabled]="isDisabled" (click)="venta()"> Agregar producto </button>
-                            <button mat-button style="margin-left: 10px;" color="warn" type="button" (click)="venta()"> Cancelar </button>
+                            <button mat-raised-button style="margin-left: 5px; margin-bottom: 10px;" color="primary" type="button" [disabled]="isDisabled" (click)="dummy()"> Agregar producto </button>
+                            <button mat-button style="margin-left: 10px;" color="warn" type="button" (click)="dummy()"> Cancelar </button>
                         
                         </div>
                         
@@ -115,6 +115,17 @@
                             <td mat-cell *matCellDef="let element"> {{element?.codigoCabys}} </td>
                             </ng-container>
 
+                        <ng-container matColumnDef="Agregar">
+                                <th mat-header-cell *matHeaderCellDef>  </th>
+                                <td mat-cell *matCellDef="let element" style="text-align: right;"> 
+                                    <a class="pointer" (click) = "agregarProductoCarrito(element)" style="color:#1f516f" matTooltip="Agregar producto al carrito">
+                                        <mat-icon>
+                                            add_shopping_cart
+                                        </mat-icon>
+                                    </a>
+                                </td>
+                            </ng-container>
+
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsSearch"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumnsSearch;"></tr>
                     </table>
@@ -158,8 +169,8 @@
                         </div>
                         
                         
-                        <button  mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit"  [disabled]="isDisabled" (click)="venta()"> Confirmar compra </button>
-                        <button mat-button style="margin-left: 10px;" color="warn" type="button" (click)="venta()"> Cancelar compra </button>
+                        <button  mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit"  [disabled]="isDisabled" (click)="dummy()"> Confirmar compra </button>
+                        <button mat-button style="margin-left: 10px;" color="warn" type="button" (click)="dummy()"> Cancelar compra </button>
                         
                     </form> 
                 </div>
