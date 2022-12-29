@@ -25,11 +25,15 @@ export class ProductoService {
     return this.http.get(`${this.url}getProducto.php?IDProducto=${IDProducto}`);
   }
 
+  getProductoBarras(codigoBarra:number){
+    return this.http.get(`${this.url}getProductoBarras.php?codigoBarra=${codigoBarra}`);
+  }
+
   updateProducto(producto){
     return this.http.post(`${this.url}updateProducto.php`, JSON.stringify(producto));
   }
 
-  getProductoByName(name:number){
-    return this.http.get(`${this.url}getProductoByName.php?name=${name}`);
+  getProductoByName(nombre){
+    return this.http.get(`${this.url}getProductoByName.php?nombre=${nombre}`);
   }
 }

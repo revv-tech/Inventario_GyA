@@ -13,6 +13,10 @@ export class UserService {
     return this.http.get(`${this.url}getAllUsers.php`);
   }
 
+  getAllUsersExceptMine(IDUsuario){
+    return this.http.get(`${this.url}getAllUsersExceptMine.php?IDUsuario=${IDUsuario}`);
+  }
+
   addUser(user){
     return this.http.post(`${this.url}addUser.php`, JSON.stringify(user));
   }

@@ -4,6 +4,7 @@ import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import * as CryptoJS from 'crypto-js'; 
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +12,7 @@ import * as CryptoJS from 'crypto-js';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  currentUser: any;
   userVerified = false;
   users = null;
   user = {
@@ -24,7 +26,7 @@ export class LoginComponent {
   key: String;
   form: FormGroup;
 
-  constructor( private fb: FormBuilder, private userService: UserService, private router: Router){
+  constructor( private fb: FormBuilder, private userService: UserService, private router: Router, private data: DataService){
   
       this.form = this.fb.group({
       user : ['',Validators.required],
@@ -35,6 +37,7 @@ export class LoginComponent {
   }
 
   ngOnInit() : void{
+    this.data.currentUser.subscribe(currentUser => this.currentUser = currentUser);
     this.key = "q]a/%E62p7N8P7z#B8H%T2$ywBeL=t";
   }
 
@@ -73,24 +76,27 @@ export class LoginComponent {
 
   async loginUser(usuario, insertedPassword){
     await this.getUserByUsername(usuario);
-    console.log(this.user);
     const desPassword = CryptoJS.AES.decrypt(this.user.contraseña.trim(), this.key.trim()).toString(CryptoJS.enc.Utf8);
-    console.log(insertedPassword);
-    console.log(desPassword);
     if(insertedPassword === desPassword){
       this.userVerified = true;
     } else {
       this.userVerified = false;
     }
+    return this.user.tipoUsuario;
   }
 
   async ingresar(){
     const username = this.form.value.user;
     const password = this.form.value.password;
-    await this.loginUser(username, password);
+    const type = await this.loginUser(username, password);
     // Get user to login
     if (this.userVerified){
-      this.router.navigate(['dashboard'])
+      if(type == "ADMIN"){
+        this.router.navigate(['dashboard']);
+      } else {
+        this.router.navigate(['dashboard']);
+      }
+      this.data.changeCurrentUser(this.user);
     }
   }
 

@@ -5,6 +5,7 @@ import { lastValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as CryptoJS from 'crypto-js'; 
+import { DataService } from 'src/app/services/data.service';
 
 export interface User {
   IDUser: any;
@@ -20,6 +21,7 @@ export interface User {
   styleUrls: ['./user.component.css']
 })
 export class UserComponent {
+  currentUser: any;
   form: FormGroup
   users = null;
   user =  {
@@ -34,7 +36,7 @@ export class UserComponent {
   isEditar : boolean;
   key: String;
 
-  constructor(private fb: FormBuilder, private userService: UserService, private _snackBar: MatSnackBar){
+  constructor(private fb: FormBuilder, private userService: UserService, private _snackBar: MatSnackBar, private data: DataService){
     this.form = this.fb.group({
       user : [''],
       password : [''],
@@ -45,12 +47,19 @@ export class UserComponent {
   }
 
   ngOnInit() : void{
+    this.data.currentUser.subscribe(currentUser => this.currentUser = currentUser);
     this.key = "q]a/%E62p7N8P7z#B8H%T2$ywBeL=t";
     this.setElementData();
   }
 
   async getAllUsers() {
     const data$ = this.userService.getAllUsers(); 
+    const data = await lastValueFrom(data$);
+    this.users = data;
+  }
+
+  async getAllUsersExceptMine() {
+    const data$ = this.userService.getAllUsersExceptMine(this.currentUser.IDUsuario); 
     const data = await lastValueFrom(data$);
     this.users = data;
   }
@@ -80,7 +89,7 @@ export class UserComponent {
     this.form.reset();
     this.isEditar = false;
     let tempData: User[] = [];
-    await this.getAllUsers();
+    await this.getAllUsersExceptMine();
     for (let e in this.users) {
       tempData.push(this.users[e]);
     }

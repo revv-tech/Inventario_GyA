@@ -6,6 +6,7 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { FormBuilder } from '@angular/forms';
 import { lastValueFrom } from 'rxjs';
 import { Product } from '../product/product.component';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-report',
@@ -13,6 +14,7 @@ import { Product } from '../product/product.component';
   styleUrls: ['./report.component.css']
 })
 export class ReportComponent {
+  currentUser: any;
   dataSource: any;
   displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad'];
   rangoDeFechas: any;
@@ -21,7 +23,7 @@ export class ReportComponent {
   isEditar: boolean;
   product: any;
 
-  constructor(private fb: FormBuilder, private productService: ProductoService, private router: Router, private _snackBar: MatSnackBar){
+  constructor(private fb: FormBuilder, private productService: ProductoService, private router: Router, private _snackBar: MatSnackBar, private data: DataService){
     this.rangoDeFechas = this.fb.group({
       firstDate :[''],
       lastDate : ['']
@@ -30,6 +32,7 @@ export class ReportComponent {
 
 
   ngOnInit() : void{
+    this.data.currentUser.subscribe(currentUser => this.currentUser = currentUser);
     this.setElementData();
   }
 
