@@ -10,8 +10,8 @@ $con = returnConection();
 mysqli_query($con ,"update usuario set usuario='$params->usuario',
 contraseña='$params->contraseña',
 tipoUsuario='$params->tipoUsuario',
-IDInventario=$params->IDInventario 
-where IDUsuario=$params->IDUsuario");
+IDInventario='$params->IDInventario' 
+where IDUsuario='$params->IDUsuario'");
 
 class Result{}
 
