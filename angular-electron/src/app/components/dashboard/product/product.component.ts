@@ -199,4 +199,5 @@ export class ProductComponent {
       this.setElementData();
     }
   }
+
 }
