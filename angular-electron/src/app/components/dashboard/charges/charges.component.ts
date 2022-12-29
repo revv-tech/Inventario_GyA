@@ -2,13 +2,12 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductoService } from 'src/app/services/producto.service';
+import { VentaService } from 'src/app/services/venta.service';
 import { Product } from '../product/product.component';
 import { ThemePalette } from '@angular/material/core';
 import { lastValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
-import { VentaService } from 'src/app/services/venta.service';
-import { DataService } from 'src/app/services/data.service';
-
+import { ThisReceiver } from '@angular/compiler';
 
 
 @Component({
@@ -17,24 +16,7 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./charges.component.css']
 })
 export class ChargesComponent {
-  currentUser: any;
-  // Formulario de Busqueda
-  formBuscar: FormGroup
-  // Formulario de Venta
-  formVenta: FormGroup
-  isDisabled: true;
-  dataSourceSearch: any;
-  dataSourceCart: any;
-  inputDisabled: true;
-  // Table
-  productsList: Product[];
-  displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad'];
-  displayedColumnsSearch: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad','barras', 'cabys'];
-  // Toggle de Factura
-  color: ThemePalette = 'accent';
-  checkedFactura = false;
-  disabledFactura = false;
-  // Porductos a mostrar
+  carrito: Product[] = [];
   products = null;
   product = {
     IDProducto: null,
@@ -47,8 +29,32 @@ export class ChargesComponent {
     IDVenta: null,
     IDBodega: null
   };
+  ventas = null;
+  venta = {
+    IDVenta: null,
+    fecha: null,
+    descuento: null,
+    cantidad: null,
+    monto: null,
+    metodo: null,
+    IDInventario: null
+  };
+  // Formulario de Busqueda
+  formBuscar: FormGroup
+  // Formulario de Venta
+  formVenta: FormGroup
+  isDisabled: true;
+  dataSource: any;
+  inputDisabled: true;
+  // Table
+  productsList: Product[];
+  displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad', 'Actions'];
+  // Toggle de Factura
+  color: ThemePalette = 'accent';
+  checkedFactura = false;
+  disabledFactura = false;
 
-  constructor(private fb: FormBuilder,private fb2: FormBuilder, private ventaService: VentaService, private _snackBar: MatSnackBar, private data: DataService){
+  constructor(private fb: FormBuilder,private fb2: FormBuilder, private productService: ProductoService, private ventaService: VentaService, private _snackBar: MatSnackBar){
     
     this.formBuscar = this.fb.group({
       nameProduct : [''],
@@ -63,78 +69,154 @@ export class ChargesComponent {
     })
   }
 
-  ngOnInit() {
-    this.data.currentUser.subscribe(currentUser => this.currentUser = currentUser);
+  ngOnInit() {}
+
+  async getAllProductos() {
+    const data$ = this.productService.getAllProductos(); 
+    const data = await lastValueFrom(data$);
+    this.products = data;
   }
-  
-  venta(){}
 
-
-
-  async buscarProducto(){
-    // Obtenemos valores del formularioS
-    const name = this.formBuscar.value.nameProduct;
-    const barCode = this.formBuscar.value.codeProduct;
-    const quantity = this.formBuscar.value.units;
-    // Asignamos valores al objeto producto
-    this.product.cantidad = quantity;
-    this.product.codigoBarra = barCode;
-    this.product.nombre = name;
-    this.product.IDVenta = 'NULL';
-    // consulta SQL
-
-  
-
-    if (barCode){
-      await this.getProductoBarras(barCode);    
-    }
-    
-    else if (name){
-      await this.getProductoNombre(name);
-    }
-    else{
-        //Alerta de feedback
-        this._snackBar.open("Debe insertar dato de búsqueda",'',{
-          duration: 1500,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom'
-        })      
-    }
-    
-    await this.setElementDataSearch();
-    
+  async getProducto(IDProducto){
+    const data$ = this.productService.getProducto(IDProducto);
+    const data = await lastValueFrom(data$);
+    this.product = data[0];
   }
 
   async getProductoBarras(codigoBarra){
-    const data$ = this.ventaService.getProductoBarras(codigoBarra);
+    const data$ = this.productService.getProductoBarras(codigoBarra);
     const data = await lastValueFrom(data$);
-    this.products = data;
+    this.product = data[0];
   }
 
-  async getProductoNombre(nombre){
-    
-    const data$ = this.ventaService.getProductoNombre(nombre);
+  async getProductoByName(name){
+    const data$ = this.productService.getProductoByName(name);
     const data = await lastValueFrom(data$);
-    this.products = data;
+    this.product = data[0];
   }
 
-  async setElementDataSearch(){
-    let tempData: Product[] = [];
-    for (let e in this.products) {
-      tempData.push(this.products[e]);
+  async updateProducto(){
+    const data$ = this.productService.updateProducto(this.product);
+    const data = await lastValueFrom(data$);
+  }
+
+  async getAllVentas() {
+    const data$ = this.ventaService.getAllVentas(); 
+    const data = await lastValueFrom(data$);
+    this.ventas = data;
+  }
+
+  async addVenta(){
+    const data$ = this.ventaService.addVenta(this.venta);
+    const data = await lastValueFrom(data$);
+  }
+  
+  async deleteVenta(IDVenta){
+    const data$ = this.ventaService.deleteVenta(IDVenta);
+    const data = await lastValueFrom(data$);
+  }
+
+  async updateVenta(){
+    const data$ = this.ventaService.updateVenta(this.venta);
+    const data = await lastValueFrom(data$);
+  }
+
+  async getVenta(IDVenta){
+    const data$ = this.ventaService.getVenta(IDVenta);
+    const data = await lastValueFrom(data$);
+    this.venta = data[0];
+  }
+
+  async getVentaByDate(fecha){
+    const data$ = this.ventaService.getVentaByDate(fecha);
+    const data = await lastValueFrom(data$);
+    this.venta = data[0];
+  }
+  
+  async buscarProducto(){
+    const name = this.formBuscar.value.nameProduct;
+    const codigoBarra = this.formBuscar.value.codeProduct;
+    if(codigoBarra){
+      await this.getProductoBarras(codigoBarra);
+    } else if (name){
+      await this.getProductoByName(name);
     }
-    this.dataSourceSearch = new MatTableDataSource(tempData);
+    this.formBuscar.patchValue({
+      nameProduct: this.product.nombre,
+      codeProduct: this.product.codigoBarra
+    });
+  }
+
+  async agregarAlCarrito(){
+    this.product.cantidad = this.formBuscar.value.units;
+    this.carrito.push(this.product);
+    this.setElementData();
     this.formBuscar.reset();
   }
 
-  dummy(){
+  setElementData(){
+    var total = 0;
+    let tempData: Product[] = [];
+    for (let e in this.carrito) {
+      tempData.push(this.carrito[e]);
+      total += this.carrito[e].cantidad * this.carrito[e].precio;
+    }
+    this.dataSource = new MatTableDataSource(tempData);
 
-        //Alerta de feedback
-        this._snackBar.open("Busqueda exitosa!",'',{
-          duration: 1500,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom'
-        })
+    this.formVenta.setValue({
+      discount: 0,
+      tax: 0.13,
+      total: total,
+      subtotal: total
+    });
+  }
+
+  cancelar(){
+    this.formBuscar.reset();
+  }
+
+  resetPage(){
+    this.setProductOnNull();
+    this.formBuscar.reset();
+    this.formVenta.reset();
+    const temparrito: Product[] = [];
+    this.carrito = temparrito;
+    this.setElementData();
+  }
+
+  eliminar(element){
+    delete(this.carrito[this.carrito.indexOf(element)]);
+    this.setElementData();
+  }
+
+  async agregarVenta(){
+    this.venta.IDInventario = 2;
+    this.venta.cantidad = 0;
+    for(var e in this.carrito){
+      this.venta.cantidad += this.carrito[e].cantidad;
+      // Descontamos los productos disponibles del inventario
+      await this.getProducto(this.carrito[e].IDProducto);
+      this.product.cantidad = this.product.cantidad  - this.carrito[e].cantidad;
+      await this.updateProducto();
+    }
+    this.venta.descuento = this.formVenta.value.discount;
+    this.venta.fecha = new Date();
+    this.venta.metodo = "EFECTIVO";
+    this.venta.monto = this.formVenta.value.total;
+    await this.addVenta();
+    this.resetPage();
+  }
+
+  setProductOnNull(){
+    this.product.IDBodega = null;
+    this.product.IDProducto = null;
+    this.product.IDVenta = null;
+    this.product.cantidad = null;
+    this.product.codigoBarra = null;
+    this.product.codigoCabys = null;
+    this.product.iva = null;
+    this.product.nombre = null;
+    this.product.precio = null;
   }
 
 }

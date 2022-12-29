@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 require("./DBConnection.php");
 $con = returnConection();
 
-$registro=mysqli_query($con ,"select *  from producto where codigoBarra = $_GET[codigoBarra]");
+$registro=mysqli_query($con ,"select *  from producto where codigoBarra = '$_GET[codigoBarra]'");
 if($reg=mysqli_fetch_array($registro)){
     $vec[]=$reg;
 }
