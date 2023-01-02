@@ -3,11 +3,11 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductoService } from 'src/app/services/producto.service';
 import { VentaService } from 'src/app/services/venta.service';
+import { ProductoxventaService } from 'src/app/services/productoxventa.service';
 import { Product } from '../product/product.component';
 import { ThemePalette } from '@angular/material/core';
 import { lastValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
-import { ThisReceiver } from '@angular/compiler';
 
 
 @Component({
@@ -39,6 +39,13 @@ export class ChargesComponent {
     metodo: null,
     IDInventario: null
   };
+  productosxventas = null;
+  productoxventa = {
+    IDProductoXVenta: null,
+    IDProducto : null,
+    IDVenta: null,
+    cantidad: null
+  };
   // Formulario de Busqueda
   formBuscar: FormGroup
   // Formulario de Venta
@@ -56,7 +63,7 @@ export class ChargesComponent {
   checkedFactura = false;
   disabledFactura = false;
 
-  constructor(private fb: FormBuilder,private fb2: FormBuilder, private productService: ProductoService, private ventaService: VentaService, private _snackBar: MatSnackBar){
+  constructor(private fb: FormBuilder,private fb2: FormBuilder, private productService: ProductoService, private ventaService: VentaService, private productoXVentaService: ProductoxventaService, private _snackBar: MatSnackBar){
     
     this.formBuscar = this.fb.group({
       nameProduct : [''],
@@ -135,6 +142,33 @@ export class ChargesComponent {
     this.venta = data[0];
   }
 
+  async getAllProductosXVentas() {
+    const data$ = this.productoXVentaService.getAllProductosXVentas(); 
+    const data = await lastValueFrom(data$);
+    this.productosxventas = data;
+  }
+
+  async addProductoXVenta(){
+    const data$ = this.productoXVentaService.addProductoXVenta(this.productoxventa);
+    const data = await lastValueFrom(data$);
+  }
+  
+  async deleteProductoXVenta(IDProductoXVenta){
+    const data$ = this.productoXVentaService.deleteProductoXVenta(IDProductoXVenta);
+    const data = await lastValueFrom(data$);
+  }
+
+  async updateProductoXVenta(){
+    const data$ = this.productoXVentaService.updateProductoXVenta(this.productoxventa);
+    const data = await lastValueFrom(data$);
+  }
+
+  async getProductoXVenta(IDProductoXVenta){
+    const data$ = this.productoXVentaService.getProductoXVenta(IDProductoXVenta);
+    const data = await lastValueFrom(data$);
+    this.productoxventa = data[0];
+  }
+
   async agregarAlCarrito(element){
     var product_temp = {
       IDProducto: null,
@@ -201,17 +235,25 @@ export class ChargesComponent {
     this.venta.IDInventario = 2;
     this.venta.cantidad = 0;
     for(var e in this.carrito){
-      this.venta.cantidad += this.carrito[e].cantidad;
+      this.venta.cantidad += parseInt(this.carrito[e].cantidad);
       // Descontamos los productos disponibles del inventario
       await this.getProducto(this.carrito[e].IDProducto);
       this.product.cantidad = this.product.cantidad  - this.carrito[e].cantidad;
       await this.updateProducto();
     }
     this.venta.descuento = this.formVenta.value.discount;
-    this.venta.fecha = new Date();
+    this.venta.fecha = (new Date()).toString();
     this.venta.metodo = "EFECTIVO";
     this.venta.monto = this.formVenta.value.total;
     await this.addVenta();
+
+    await this.getVentaByDate(this.venta.fecha);
+    for(var e in this.carrito){
+      this.productoxventa.IDProducto = this.carrito[e].IDProducto;
+      this.productoxventa.IDVenta = this.venta.IDVenta;
+      this.productoxventa.cantidad = this.carrito[e].cantidad;
+      await this.addProductoXVenta();
+    }
     this.resetPage();
   }
 
