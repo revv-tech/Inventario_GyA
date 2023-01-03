@@ -200,6 +200,7 @@
                             <h3 class="example-h2">¿Desea generar factura?</h3>
                             <mat-slide-toggle
                                 class="example-margin"
+                                (change)="updateFactura($event)"
                                 [color]="color"
                                 [checked]="checkedFactura"
                                 [disabled]="disabledFactura">

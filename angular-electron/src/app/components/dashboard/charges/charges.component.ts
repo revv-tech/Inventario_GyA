@@ -194,6 +194,9 @@ export class ChargesComponent {
     this.isEfectivo = event.checked;
   }
 
+  updateFactura(event){
+    this.checkedFactura = event.checked;
+  }
   async agregarAlCarrito(element){
     var product_temp = {
       IDProducto: null,
@@ -371,7 +374,9 @@ export class ChargesComponent {
     }
     await this.getAllPXVByIDVenta(Number(this.venta.IDVenta));
     
-    this.createPDF(this.productosxventas,this.venta.monto,this.venta.descuento,this.venta.fecha);
+    if (this.checkedFactura){
+      this.createPDF(this.productosxventas,this.venta.monto,this.venta.descuento,this.venta.fecha);
+    }
     this.resetPage();
   }
 
