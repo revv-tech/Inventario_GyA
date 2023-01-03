@@ -13,6 +13,10 @@ export class ProductoxventaService {
     return this.http.get(`${this.url}getAllProductosXVentas.php`);
   }
 
+  getAllPXVByIDVenta(IDVenta){
+    return this.http.get(`${this.url}getAllPXVByIDVenta.php?IDVenta=${IDVenta}`);
+  }
+
   addProductoXVenta(productoxventa){
     return this.http.post(`${this.url}addProductoXVenta.php`, JSON.stringify(productoxventa));
   }

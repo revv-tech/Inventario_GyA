@@ -26,6 +26,7 @@
     "crypto-js": "^4.1.1",
     "electron-reload": "^2.0.0-alpha.1",
     "mysql": "^2.18.1",
+    "pdfmake": "^0.2.7",
     "promise-mysql": "^5.2.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
