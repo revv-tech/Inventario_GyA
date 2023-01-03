@@ -58,18 +58,26 @@ export class ChargesComponent {
   dataSourceCart: any;
   dataSourceSearch: any;
   inputDisabled: true;
+  // Formulario Agregar Producto
+  formAgregarProd: FormGroup;
   // Table
   productsList: Product[];
-  displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad'];
+  displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad', 'Eliminar'];
   displayedColumnsSearch: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad', 'barras', 'cabys', 'Agregar'];
   // Toggle de Factura
   color: ThemePalette = 'accent';
-  checkedFactura = false;
   disabledFactura = false;
+  checkedFactura = false;
+  
 
-  constructor(private fb: FormBuilder,private fb2: FormBuilder, private productService: ProductoService, private ventaService: VentaService, private productoXVentaService: ProductoxventaService, private _snackBar: MatSnackBar){
+  constructor(private fb: FormBuilder,private fb2: FormBuilder, private fb3: FormBuilder, private productService: ProductoService, private ventaService: VentaService, private productoXVentaService: ProductoxventaService, private _snackBar: MatSnackBar){
     
     this.formBuscar = this.fb.group({
+      nameProduct : [''],
+      codeProduct : [''],
+      units: ['']
+    })
+    this.formAgregarProd = this.fb3.group({
       nameProduct : [''],
       codeProduct : [''],
       units: ['']
@@ -80,6 +88,8 @@ export class ChargesComponent {
       tax : [{value: '', disabled:true}],
       discount : [{value: '', disabled:true}]
     })
+    
+
   }
 
   ngOnInit() {}
@@ -206,6 +216,17 @@ export class ChargesComponent {
     this.formBuscar.reset();
   }
 
+  deleteProductCarrito(product : any){
+    let tempData: Product[] = [];
+    for (let e in this.carrito) {
+      if (this.carrito[e].IDProducto != product.IDProducto){
+        tempData.push(this.carrito[e]);
+      }
+    }
+    this.carrito = tempData;
+    this.setElementData();
+  }
+
   setElementData(){
     var total = 0;
     let tempData: Product[] = [];
@@ -241,11 +262,15 @@ export class ChargesComponent {
     this.setElementData();
   }
 
+
   createPDF(productXVenta : any, total : string, discount : string, date : string){
 
     var rows = [];
     rows.push([ 'ID de Producto', 'Nombre', 'Cantidad', 'Precio' ]);
-    
+    var fCompra = 'Fecha de la compra:  ' + date;
+    var pTotal = 'Precio total de la compra:  ' + total;
+    var dCompra = 'Descuento total de la compra: ' + discount;
+    var encabezado = 'Lista de Artículos adquiridos: '
     for (var product of productXVenta){
       rows.push([product.IDProducto, product.nombre, product.cantidad, product.precio])
     }
@@ -258,32 +283,41 @@ export class ChargesComponent {
           bold: true,
           alignment: 'center'
         },
-        anotherStyle: {
+        chapter: {
           italics: true,
-          alignment: 'center'
+          fontSize: 12,
+          alignment: 'right',
+          lineHeight: 2
+        },
+        sentence: {
+          italics: true,
+          fontSize: 10,
+          alignment: 'left',
+          lineHeight: 2
         }
       },
       pageSize: 'A4',
       // Header and Footer
       header: { text: 'Minisúper GyA', style: 'header' },
       footer: { text: 'Gracias por su compra!',  style: 'header' },
-      
       content: [
         {
-          columns: [
-            {
-              width: 'auto',
-              text: 'Fecha de la compra: ' + date
-            },
-            {
-              width: 'auto',
-              text: 'Descuento: ' + discount
-            },
-            {
-              width: 'auto',
-              text: 'Total pagado: ' + total
-            },
-          ],
+          text: 'Teléfono: 84176120',
+          style: 'chapter',
+        },
+        {
+          text: 'Dirección: 250mts al norte del MOPT, Buenos Aires',
+          style: 'chapter',
+        },
+        {
+          text: fCompra,
+          style: 'chapter',
+        },
+        {
+          text: encabezado,
+          style: 'sentence',
+        },
+        {
           layout: 'lightHorizontalLines', // optional
           table: {
             // headers are automatically repeated if the table spans over multiple pages
@@ -292,7 +326,14 @@ export class ChargesComponent {
             widths: [ '*', 'auto', 100, '*' ],
             body: rows
           }
-          
+        },
+        {
+          text: dCompra,
+          style: 'chapter',
+        },
+        {
+          text: pTotal,
+          style: 'chapter',
         }
       ]
     };
@@ -312,6 +353,7 @@ export class ChargesComponent {
     this.venta.fecha = (new Date()).toString();
     this.venta.metodo = "EFECTIVO";
     this.venta.monto = this.formVenta.value.total;
+    console.log(this.venta);
     await this.addVenta();
     await this.getVentaByDate(this.venta.fecha);
     for(var e in this.carrito){
@@ -321,9 +363,13 @@ export class ChargesComponent {
       await this.addProductoXVenta();
     }
     await this.getAllPXVByIDVenta(Number(this.venta.IDVenta));
+    
     this.resetPage();
     console.log(this.productosxventas);
+    
     this.createPDF(this.productosxventas,this.venta.monto,this.venta.descuento,this.venta.fecha);
+    
+    
   }
 
   setProductOnNull(){

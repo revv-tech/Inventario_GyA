@@ -33,6 +33,33 @@
                         
                     </form> 
                 </div>
+                <h2 class="margin-top: 30px margin-bottom:20px" style="font-weight:bold" >Agregar Producto</h2>
+                <div class="example-container">
+                    <form [formGroup] = "formAgregarProd">
+                        <mat-form-field appearance="fill" class = "ancho">
+                            <mat-label>Nombre de Producto</mat-label>
+                            <input matInput autocomplete="off" formControlName = "nameProduct">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class = "ancho">
+                            <mat-label>Código de Producto</mat-label>
+                            <input matInput autocomplete="off" formControlName = "codeProduct">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class = "ancho">
+                            <mat-label>Cantidad de Unidades</mat-label>
+                            <input matInput autocomplete="off" formControlName = "units">
+                        </mat-form-field>
+        
+                        <div class="login">
+                            <button mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit" (click)="buscarProducto()"> Agregar </button>
+                            <button mat-button style="margin-left: 10px;" color="warn" type="button" (click)="cancelar()"> Cancelar </button>
+                        
+                        </div>
+                        
+                    </form> 
+                </div>
+
+
+                
             </mat-card> 
         </div> 
 
@@ -71,9 +98,9 @@
                 <ng-container matColumnDef="Eliminar">
                     <th mat-header-cell *matHeaderCellDef>  </th>
                     <td mat-cell *matCellDef="let element" style="text-align: right;"> 
-                        <a class="pointer" (click) = "agregarAlCarrito(element)" style="color:#6f1f1f" matTooltip="Eliminar de carrito">
+                        <a class="pointer" (click) = "deleteProductCarrito(element)" style="color:#ff0000" matTooltip="Eliminar de carrito">
                             <mat-icon>
-                                add_shopping_cart
+                                delete
                             </mat-icon>
                         </a>
                     </td>
@@ -168,8 +195,18 @@
                         <mat-form-field appearance="fill" class = "ancho">
                             <input matInput autocomplete="off" formControlName = "subtotal">
                         </mat-form-field>
+                        
                         <div class="login" style="margin-bottom:20px">
                             <h3 class="example-h2">¿Desea generar factura?</h3>
+                            <mat-slide-toggle
+                                class="example-margin"
+                                [color]="color"
+                                [checked]="checkedFactura"
+                                [disabled]="disabledFactura">
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="login" style="margin-bottom:20px">
+                            <h3 class="example-h2">¿El tipo de pago es en efectivo?</h3>
                             <mat-slide-toggle
                                 class="example-margin"
                                 [color]="color"
