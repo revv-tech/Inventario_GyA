@@ -152,6 +152,12 @@ export class ChargesComponent {
     this.productosxventas = data;
   }
 
+  async getAllPXVByIDVenta(IDVenta) {
+    const data$ = this.productoXVentaService.getAllPXVByIDVenta(IDVenta); 
+    const data = await lastValueFrom(data$);
+    this.productosxventas = data;
+  }
+
   async addProductoXVenta(){
     const data$ = this.productoXVentaService.addProductoXVenta(this.productoxventa);
     const data = await lastValueFrom(data$);
