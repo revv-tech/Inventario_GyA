@@ -237,6 +237,23 @@ export class ChargesComponent {
 
   createPDF(){
     const pdfDefinition: any  = {
+      // Styles for text on the pdf
+      styles: {
+        header: {
+          fontSize: 22,
+          bold: true,
+          alignment: 'center'
+        },
+        anotherStyle: {
+          italics: true,
+          alignment: 'center'
+        }
+      },
+      pageSize: 'A4',
+      // Header and Footer
+      header: { text: 'Minisúper GyA', style: 'header' },
+      footer: { text: 'Gracias por su compra!',  style: 'header' },
+      
       content: [
         {
           layout: 'lightHorizontalLines', // optional
@@ -247,7 +264,7 @@ export class ChargesComponent {
             widths: [ '*', 'auto', 100, '*' ],
     
             body: [
-              [ 'First', 'Second', 'Third', 'The last one' ],
+              [ 'ID de Producto', 'Nombre', 'Cantidad', 'Precio' ],
               [ 'Value 1', 'Value 2', 'Value 3', 'Value 4' ],
               [ { text: 'Bold value', bold: true }, 'Val 2', 'Val 3', 'Val 4' ]
             ]
