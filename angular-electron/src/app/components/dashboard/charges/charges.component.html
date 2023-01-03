@@ -209,6 +209,7 @@
                             <h3 class="example-h2">¿El tipo de pago es en efectivo?</h3>
                             <mat-slide-toggle
                                 class="example-margin"
+                                (change)="updateMetodoPago($event)"
                                 [color]="color"
                                 [checked]="checkedFactura"
                                 [disabled]="disabledFactura">

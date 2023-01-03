@@ -55,6 +55,7 @@ export class ChargesComponent {
   // Formulario de Venta
   formVenta: FormGroup
   isDisabled: true;
+  isEfectivo: false;
   dataSourceCart: any;
   dataSourceSearch: any;
   inputDisabled: true;
@@ -189,6 +190,10 @@ export class ChargesComponent {
     this.productoxventa = data[0];
   }
 
+  updateMetodoPago(event){
+    this.isEfectivo = event.checked;
+  }
+
   async agregarAlCarrito(element){
     var product_temp = {
       IDProducto: null,
@@ -274,7 +279,6 @@ export class ChargesComponent {
     for (var product of productXVenta){
       rows.push([product.IDProducto, product.nombre, product.cantidad, product.precio])
     }
-    console.log(rows);
     const pdfDefinition: any  = {
       // Styles for text on the pdf
       styles: {
@@ -302,7 +306,7 @@ export class ChargesComponent {
       footer: { text: 'Gracias por su compra!',  style: 'header' },
       content: [
         {
-          text: 'Teléfono: 84176120',
+          text: 'Teléfono: 8417-6120',
           style: 'chapter',
         },
         {
@@ -351,9 +355,12 @@ export class ChargesComponent {
     }
     this.venta.descuento = this.formVenta.value.discount;
     this.venta.fecha = (new Date()).toString();
-    this.venta.metodo = "EFECTIVO";
+    if(this.isEfectivo){
+      this.venta.metodo = "EFECTIVO";
+    } else {
+      this.venta.metodo = "TARJETA";
+    }
     this.venta.monto = this.formVenta.value.total;
-    console.log(this.venta);
     await this.addVenta();
     await this.getVentaByDate(this.venta.fecha);
     for(var e in this.carrito){
@@ -364,12 +371,8 @@ export class ChargesComponent {
     }
     await this.getAllPXVByIDVenta(Number(this.venta.IDVenta));
     
-    this.resetPage();
-    console.log(this.productosxventas);
-    
     this.createPDF(this.productosxventas,this.venta.monto,this.venta.descuento,this.venta.fecha);
-    
-    
+    this.resetPage();
   }
 
   setProductOnNull(){
