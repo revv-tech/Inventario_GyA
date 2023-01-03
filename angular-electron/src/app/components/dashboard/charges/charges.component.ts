@@ -241,7 +241,15 @@ export class ChargesComponent {
     this.setElementData();
   }
 
-  createPDF(){
+  createPDF(productXVenta : any, total : string, discount : string, date : string){
+
+    var rows = [];
+    rows.push([ 'ID de Producto', 'Nombre', 'Cantidad', 'Precio' ]);
+    
+    for (var product of productXVenta){
+      rows.push([product.IDProducto, product.nombre, product.cantidad, product.precio])
+    }
+    console.log(rows);
     const pdfDefinition: any  = {
       // Styles for text on the pdf
       styles: {
@@ -262,23 +270,32 @@ export class ChargesComponent {
       
       content: [
         {
+          columns: [
+            {
+              width: 'auto',
+              text: 'Fecha de la compra: ' + date
+            },
+            {
+              width: 'auto',
+              text: 'Descuento: ' + discount
+            },
+            {
+              width: 'auto',
+              text: 'Total pagado: ' + total
+            },
+          ],
           layout: 'lightHorizontalLines', // optional
           table: {
             // headers are automatically repeated if the table spans over multiple pages
             // you can declare how many rows should be treated as headers
             headerRows: 1,
             widths: [ '*', 'auto', 100, '*' ],
-    
-            body: [
-              [ 'ID de Producto', 'Nombre', 'Cantidad', 'Precio' ],
-              [ 'Value 1', 'Value 2', 'Value 3', 'Value 4' ],
-              [ { text: 'Bold value', bold: true }, 'Val 2', 'Val 3', 'Val 4' ]
-            ]
+            body: rows
           }
+          
         }
       ]
     };
-
     const pdf = pdfMake.createPdf(pdfDefinition).download();
   }
   async agregarVenta(){
@@ -296,7 +313,6 @@ export class ChargesComponent {
     this.venta.metodo = "EFECTIVO";
     this.venta.monto = this.formVenta.value.total;
     await this.addVenta();
-
     await this.getVentaByDate(this.venta.fecha);
     for(var e in this.carrito){
       this.productoxventa.IDProducto = this.carrito[e].IDProducto;
@@ -304,8 +320,10 @@ export class ChargesComponent {
       this.productoxventa.cantidad = this.carrito[e].cantidad;
       await this.addProductoXVenta();
     }
+    await this.getAllPXVByIDVenta(Number(this.venta.IDVenta));
     this.resetPage();
-    this.createPDF();
+    console.log(this.productosxventas);
+    this.createPDF(this.productosxventas,this.venta.monto,this.venta.descuento,this.venta.fecha);
   }
 
   setProductOnNull(){

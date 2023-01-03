@@ -68,6 +68,17 @@
                 <td mat-cell *matCellDef="let element"> {{element?.cantidad}} </td>
                 </ng-container>
 
+                <ng-container matColumnDef="Eliminar">
+                    <th mat-header-cell *matHeaderCellDef>  </th>
+                    <td mat-cell *matCellDef="let element" style="text-align: right;"> 
+                        <a class="pointer" (click) = "agregarAlCarrito(element)" style="color:#6f1f1f" matTooltip="Eliminar de carrito">
+                            <mat-icon>
+                                add_shopping_cart
+                            </mat-icon>
+                        </a>
+                    </td>
+            </ng-container>
+
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>                    
@@ -123,7 +134,7 @@
                                         </mat-icon>
                                     </a>
                                 </td>
-                            </ng-container>
+                        </ng-container>
 
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsSearch"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumnsSearch;"></tr>

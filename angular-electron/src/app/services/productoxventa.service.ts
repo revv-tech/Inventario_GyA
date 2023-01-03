@@ -14,7 +14,7 @@ export class ProductoxventaService {
   }
 
   getAllPXVByIDVenta(IDVenta){
-    return this.http.get(`${this.url}getAllPXVByIDVenta.phpIDVenta=${IDVenta}`);
+    return this.http.get(`${this.url}getAllPXVByIDVenta.php?IDVenta=${IDVenta}`);
   }
 
   addProductoXVenta(productoxventa){
