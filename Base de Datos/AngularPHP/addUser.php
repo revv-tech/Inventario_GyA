@@ -8,7 +8,7 @@ $params = json_decode($json);
 require("./DBConnection.php");
 $con = returnConection();
  $registro=mysqli_query($con ,"insert into usuario(usuario, contraseña, tipoUsuario, IDInventario)
- values ('$params->usuario','$params->contraseña', '$params->tipoUsuario', $params->IDInventario')");
+ values ('$params->usuario','$params->contraseña ', '$params->tipoUsuario', '$params->IDInventario')");
 
 class Result{}
 

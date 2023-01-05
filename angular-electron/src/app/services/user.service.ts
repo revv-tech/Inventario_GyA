@@ -13,6 +13,10 @@ export class UserService {
     return this.http.get(`${this.url}getAllUsers.php`);
   }
 
+  getAllUsersExceptMine(IDUsuario){
+    return this.http.get(`${this.url}getAllUsersExceptMine.php?IDUsuario=${IDUsuario}`);
+  }
+
   addUser(user){
     return this.http.post(`${this.url}addUser.php`, JSON.stringify(user));
   }
@@ -25,11 +29,11 @@ export class UserService {
     return this.http.get(`${this.url}getUser.php?IDUsuario=${idUser}`);
   }
 
-  updateUser(user){
-    return this.http.post(`${this.url}updateUser.php`, JSON.stringify(user));
+  getUserByUsername(username){
+    return this.http.get(`${this.url}getUserByUsername.php?usuario=${username}`);
   }
 
-  loginUser(usuario, contraseña){
-    return this.http.get(`${this.url}loginUsuario.php?usuario=${usuario}&contraseña=${contraseña}`);
+  updateUser(user){
+    return this.http.post(`${this.url}updateUser.php`, JSON.stringify(user));
   }
 }

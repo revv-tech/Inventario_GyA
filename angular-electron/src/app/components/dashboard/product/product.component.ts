@@ -6,6 +6,7 @@ import { lastValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import {Router} from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DataService } from 'src/app/services/data.service';
 
 export interface Product {
   IDProducto: any;
@@ -25,7 +26,7 @@ export interface Product {
   styleUrls: ['./product.component.css']
 })
 export class ProductComponent {
-
+  currentUser: any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   form: FormGroup
   products = null;
@@ -45,7 +46,7 @@ export class ProductComponent {
   isEditar: boolean;
   fechaCaducidad: Date | null;
 
-  constructor( private fb: FormBuilder, private productService: ProductoService, private router: Router, private _snackBar: MatSnackBar){
+  constructor( private fb: FormBuilder, private productService: ProductoService, private _snackBar: MatSnackBar, private data: DataService){
     this.form = this.fb.group({
       nameProduct : [''],
       barCode : [''],
@@ -61,6 +62,7 @@ export class ProductComponent {
   }
 
   ngOnInit() : void{
+    this.data.currentUser.subscribe(currentUser => this.currentUser = currentUser);
     this.setElementData();
   }
 
@@ -163,8 +165,6 @@ export class ProductComponent {
       horizontalPosition: 'center',
       verticalPosition: 'bottom'
     })
-
-    
   }
 
   cargarProducto(element){
@@ -201,4 +201,5 @@ export class ProductComponent {
       this.setElementData();
     }
   }
+
 }

@@ -1,7 +1,35 @@
-<mat-toolbar style="height:80px;" color="primary" >
-    <span class="example-spacer" ></span>
-    <span class="margin-top: 20px margin-bottom:20px" style="font-weight:lighter" >Mi información</span>
-</mat-toolbar>
 
+
+<!--
+    Formulario de Datos registrados     
+-->
+<div class ="body">
+    <div class="login">
+        <form [formGroup] = "form" (ngSubmit) = "editar()">
+            <img  src="./assets/images/resume.png" width="40%" style="margin-bottom: 20px;">
+            <h1 style="font-weight:bold" >Mis datos registrados</h1>
+            <div class="example-container">
+                <mat-form-field appearance="fill" class = "ancho">
+                    <mat-label>Nombre de usuario</mat-label>
+                        <input matInput autocomplete="off" formControlName = "user">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class = "ancho">
+                    <mat-label>Contraseña</mat-label>
+                        <input type="password" matInput autocomplete="off" formControlName = "password">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class = "ancho">
+                    <mat-label>Confirmar Contraseña</mat-label>
+                        <input type="password" matInput autocomplete="off" formControlName = "confirmedPassword">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class = "ancho">
+                    <mat-label>Inventario</mat-label>
+                        <input matInput autocomplete="off" formControlName = "IDInventory">
+                </mat-form-field>
+                <button type="submit" mat-raised-button color="primary" class = "ancho button" [disabled]="form.invalid">Editar mis datos</button>
+            </div>
+        </form>  
+    </div>
+    
+</div>
 
 

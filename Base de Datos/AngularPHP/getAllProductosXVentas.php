@@ -6,11 +6,10 @@ header('Content-Type: application/json');
 require("./DBConnection.php");
 $con = returnConection();
 
-$registro=mysqli_query($con ,"select *  from producto where nombre REGEXP '$_GET[nombre]'");
+$registro=mysqli_query($con ,"select * from productoxventa");
 $vec=[];
 while($reg=mysqli_fetch_array($registro)){
     $vec[]=$reg;
 }
-
 $cad = json_encode($vec);
 echo $cad;

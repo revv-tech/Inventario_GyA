@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
+import * as CryptoJS from 'crypto-js'; 
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-login',
@@ -10,6 +12,7 @@ import { lastValueFrom } from 'rxjs';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  currentUser: any;
   userVerified = false;
   users = null;
   user = {
@@ -20,9 +23,10 @@ export class LoginComponent {
     IDInventario: null
   };
   
-  form: FormGroup
+  key: String;
+  form: FormGroup;
 
-  constructor( private fb: FormBuilder, private userService: UserService, private router: Router){
+  constructor( private fb: FormBuilder, private userService: UserService, private router: Router, private data: DataService){
   
       this.form = this.fb.group({
       user : ['',Validators.required],
@@ -33,6 +37,8 @@ export class LoginComponent {
   }
 
   ngOnInit() : void{
+    this.data.currentUser.subscribe(currentUser => this.currentUser = currentUser);
+    this.key = "q]a/%E62p7N8P7z#B8H%T2$ywBeL=t";
   }
 
   async getAllUsers() {
@@ -62,21 +68,35 @@ export class LoginComponent {
     this.user = data[0];
   }
 
-  async loginUser(usuario, contraseña){
-    const data$ = this.userService.loginUser(usuario, contraseña);
+  async getUserByUsername(username){
+    const data$ = this.userService.getUserByUsername(username);
     const data = await lastValueFrom(data$);
     this.user = data[0];
-    this.userVerified = true;
+  }
+
+  async loginUser(usuario, insertedPassword){
+    await this.getUserByUsername(usuario);
+    const desPassword = CryptoJS.AES.decrypt(this.user.contraseña.trim(), this.key.trim()).toString(CryptoJS.enc.Utf8);
+    if(insertedPassword === desPassword){
+      this.userVerified = true;
+    } else {
+      this.userVerified = false;
+    }
+    return this.user.tipoUsuario;
   }
 
   async ingresar(){
     const username = this.form.value.user;
     const password = this.form.value.password;
-    await this.loginUser(username, password);
-
+    const type = await this.loginUser(username, password);
     // Get user to login
     if (this.userVerified){
-      this.router.navigate(['dashboard'])
+      if(type == "ADMIN"){
+        this.router.navigate(['dashboard']);
+      } else {
+        this.router.navigate(['dashboard']);
+      }
+      this.data.changeCurrentUser(this.user);
     }
   }
 
