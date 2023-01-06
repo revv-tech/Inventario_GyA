@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import * as CryptoJS from 'crypto-js'; 
 import { DataService } from 'src/app/services/data.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +27,7 @@ export class LoginComponent {
   key: String;
   form: FormGroup;
 
-  constructor( private fb: FormBuilder, private userService: UserService, private router: Router, private data: DataService){
+  constructor( private fb: FormBuilder, private userService: UserService, private router: Router, private data: DataService, private _snackBar: MatSnackBar){
   
       this.form = this.fb.group({
       user : ['',Validators.required],
@@ -80,6 +81,13 @@ export class LoginComponent {
     if(insertedPassword === desPassword){
       this.userVerified = true;
     } else {
+
+      //Alerta de feedback
+      this._snackBar.open("El usuario y la contraseña ingresados no coinciden",'',{
+          duration: 1500,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+      })
       this.userVerified = false;
     }
     return this.user.tipoUsuario;

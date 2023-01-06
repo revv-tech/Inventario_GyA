@@ -30,10 +30,17 @@
                             <mat-label>Precio</mat-label>
                                 <input matInput autocomplete="off" formControlName = "price">
                         </mat-form-field>
-                        <mat-form-field appearance="fill" class = "ancho">
+
+                        <mat-form-field appearance="fill" class="ancho">
                             <mat-label>IVA</mat-label>
-                                <input matInput autocomplete="off" formControlName = "iva">
-                        </mat-form-field>
+                            <mat-select [(ngModel)]="selectedIVA" name="iva">
+                              <mat-option *ngFor="let num of ivaList" [value]="num.value">
+                                {{num.viewValue}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <p> IVA Actual {{selectedIVA}} </p>
+
                         <mat-form-field appearance="fill" class = "ancho">
                             <mat-label>Cantidad</mat-label>
                                 <input matInput autocomplete="off" formControlName = "quantity">
