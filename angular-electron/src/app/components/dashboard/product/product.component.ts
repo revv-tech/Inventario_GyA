@@ -20,6 +20,12 @@ export interface Product {
   IDBodega: any;
 }
 
+
+export interface IVA {
+  value: number;
+  viewValue: string;
+}
+
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -41,6 +47,12 @@ export class ProductComponent {
     IDVenta: null,
     IDBodega: null
   };
+  ivaList: IVA[] = [
+    {value: 0, viewValue: '0%'},
+    {value: 0.13, viewValue: '0.13%'},
+    
+  ];
+  selectedIVA: number;
   displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad','barras', 'cabys', 'Actions'];
   dataSource: any;
   isEditar: boolean;
@@ -55,6 +67,7 @@ export class ProductComponent {
       iva : [''],
       quantity : ['']
     })
+    
   }
 
   ngAfterViewInit() {
@@ -106,12 +119,12 @@ export class ProductComponent {
 
   async agregar(){
     // Obtenemos valores del formulario
-    var name = this.form.value.nameProduct;
-    name = String(name).toLowerCase();
+    const name = this.form.value.nameProduct;
     const barCode = this.form.value.barCode;
     const cabyCode = this.form.value.cabyCode;
     const price = this.form.value.price;
-    const iva = this.form.value.iva;
+    const iva = this.selectedIVA
+    console.log(iva)
     const quantity = this.form.value.quantity;
     // Asignamos valores al objeto producto
     this.product.cantidad = quantity;
@@ -121,13 +134,33 @@ export class ProductComponent {
     this.product.nombre = name;
     this.product.precio = price;
     // consulta SQL
-    await this.addProduct();
-    await this.setElementData();
-    this._snackBar.open("El producto fue agregado con éxito!",'',{
-      duration: 1500,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom'
-    })
+
+    if (name && barCode && cabyCode && price && iva && quantity){
+      if (isNaN(price) || isNaN(quantity)){
+        this._snackBar.open("El precio y la cantidad deben ser números",'',{
+          duration: 1500,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        })
+      }
+      else{
+        await this.addProduct();
+        await this.setElementData();
+        this._snackBar.open("El producto fue agregado con éxito!",'',{
+          duration: 1500,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        })
+      }
+    }
+    else{
+      this._snackBar.open("Todos los campos del formulario deben estar llenos",'',{
+        duration: 1500,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
+      })
+    }
+
   }
 
   async eliminar(id){
@@ -142,12 +175,11 @@ export class ProductComponent {
 
   async editar(){
     // Obtenemos valores del formularioS
-    var name = this.form.value.nameProduct;
-    name = String(name).toLowerCase();
+    const name = this.form.value.nameProduct;
     const barCode = this.form.value.barCode;
     const cabyCode = this.form.value.cabyCode;
     const price = this.form.value.price;
-    const iva = this.form.value.iva;
+    const iva = this.selectedIVA;
     const quantity = this.form.value.quantity;
     // Asignamos valores al objeto producto
     this.product.cantidad = quantity;
