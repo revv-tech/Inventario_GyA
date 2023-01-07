@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ProductoService } from 'src/app/services/producto.service';
 import { lastValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
@@ -58,6 +58,8 @@ export class ProductComponent {
   isEditar: boolean;
   fechaCaducidad: Date | null;
 
+  pageSlice = null;
+
   constructor( private fb: FormBuilder, private productService: ProductoService, private _snackBar: MatSnackBar, private data: DataService){
     this.form = this.fb.group({
       nameProduct : [''],
@@ -111,8 +113,20 @@ export class ProductComponent {
     this.isEditar = false;
     let tempData: Product[] = [];
     await this.getAllProductos();
-    for (let e in this.products) {
-      tempData.push(this.products[e]);
+    this.pageSlice = this.products.slice(0, 10)
+    for (let e in this.pageSlice) {
+      tempData.push(this.pageSlice[e]);
+    }
+    this.dataSource = new MatTableDataSource(tempData);
+  }
+
+  async setElementDataSlice(){
+    this.form.reset();
+    this.isEditar = false;
+    let tempData: Product[] = [];
+    await this.getAllProductos();
+    for (let e in this.pageSlice) {
+      tempData.push(this.pageSlice[e]);
     }
     this.dataSource = new MatTableDataSource(tempData);
   }
@@ -136,7 +150,7 @@ export class ProductComponent {
     // consulta SQL
 
     if (name && barCode && cabyCode && price && iva && quantity){
-      if (isNaN(price) || isNaN(quantity)){
+      if (isNaN(price) || isNaN(quantity) || isNaN(cabyCode) || isNaN(barCode)){
         this._snackBar.open("El precio y la cantidad deben ser números",'',{
           duration: 1500,
           horizontalPosition: 'center',
@@ -145,7 +159,7 @@ export class ProductComponent {
       }
       else{
         await this.addProduct();
-        await this.setElementData();
+        await this.setElementDataSlice();
         this._snackBar.open("El producto fue agregado con éxito!",'',{
           duration: 1500,
           horizontalPosition: 'center',
@@ -165,7 +179,7 @@ export class ProductComponent {
 
   async eliminar(id){
     await this.deleteProducto(id);
-    await this.setElementData();
+    await this.setElementDataSlice();
     this._snackBar.open("El producto fue eliminado con éxito!",'',{
       duration: 1500,
       horizontalPosition: 'center',
@@ -191,7 +205,7 @@ export class ProductComponent {
     this.product.IDVenta = 'NULL';
     // consulta SQL
     await this.updateProducto();
-    await this.setElementData();
+    await this.setElementDataSlice();
     this._snackBar.open("El producto fue editado con éxito!",'',{
       duration: 1500,
       horizontalPosition: 'center',
@@ -230,8 +244,19 @@ export class ProductComponent {
         this.editar();
     }
     if(buttonType==="cancelar"){
-      this.setElementData();
+      this.setElementDataSlice();
     }
+  }
+
+  //Metodo para manejar el Angular Material Paginator
+  onPageChange(event: PageEvent){
+    const startIndex = event.pageIndex * event.pageSize
+    let endIndex = startIndex + event.pageSize 
+    if (endIndex > this.products.length){
+      endIndex = this.products.length
+    }
+    this.pageSlice = this.products.slice(startIndex, endIndex)
+    this.setElementDataSlice()
   }
 
 }
