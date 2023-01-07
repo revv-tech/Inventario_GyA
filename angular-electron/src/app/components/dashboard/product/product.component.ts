@@ -53,12 +53,14 @@ export class ProductComponent {
     
   ];
   selectedIVA: number;
-  displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad','barras', 'cabys', 'Actions'];
+  displayedColumns: string[] = ['IDProducto', 'nombre', 'precio', 'cantidad','barras', 'cabys', 'iva', 'Actions'];
   dataSource: any;
   isEditar: boolean;
   fechaCaducidad: Date | null;
 
   pageSlice = null;
+  firstIndex = 0;
+  lastIndex = 10;
 
   constructor( private fb: FormBuilder, private productService: ProductoService, private _snackBar: MatSnackBar, private data: DataService){
     this.form = this.fb.group({
@@ -113,18 +115,7 @@ export class ProductComponent {
     this.isEditar = false;
     let tempData: Product[] = [];
     await this.getAllProductos();
-    this.pageSlice = this.products.slice(0, 10)
-    for (let e in this.pageSlice) {
-      tempData.push(this.pageSlice[e]);
-    }
-    this.dataSource = new MatTableDataSource(tempData);
-  }
-
-  async setElementDataSlice(){
-    this.form.reset();
-    this.isEditar = false;
-    let tempData: Product[] = [];
-    await this.getAllProductos();
+    this.pageSlice = this.products.slice(this.firstIndex, this.lastIndex)
     for (let e in this.pageSlice) {
       tempData.push(this.pageSlice[e]);
     }
@@ -137,9 +128,13 @@ export class ProductComponent {
     const barCode = this.form.value.barCode;
     const cabyCode = this.form.value.cabyCode;
     const price = this.form.value.price;
-    const iva = this.selectedIVA
-    console.log(iva)
+    var iva = this.selectedIVA
     const quantity = this.form.value.quantity;
+
+    if(!iva){
+      console.log("Undefined")
+      iva = 0
+    }
     // Asignamos valores al objeto producto
     this.product.cantidad = quantity;
     this.product.codigoBarra = barCode;
@@ -149,7 +144,7 @@ export class ProductComponent {
     this.product.precio = price;
     // consulta SQL
 
-    if (name && barCode && cabyCode && price && iva && quantity){
+    if (name && barCode && cabyCode && price && quantity){
       if (isNaN(price) || isNaN(quantity) || isNaN(cabyCode) || isNaN(barCode)){
         this._snackBar.open("El precio y la cantidad deben ser números",'',{
           duration: 1500,
@@ -159,7 +154,7 @@ export class ProductComponent {
       }
       else{
         await this.addProduct();
-        await this.setElementDataSlice();
+        await this.setElementData();
         this._snackBar.open("El producto fue agregado con éxito!",'',{
           duration: 1500,
           horizontalPosition: 'center',
@@ -179,7 +174,7 @@ export class ProductComponent {
 
   async eliminar(id){
     await this.deleteProducto(id);
-    await this.setElementDataSlice();
+    await this.setElementData();
     this._snackBar.open("El producto fue eliminado con éxito!",'',{
       duration: 1500,
       horizontalPosition: 'center',
@@ -205,7 +200,7 @@ export class ProductComponent {
     this.product.IDVenta = 'NULL';
     // consulta SQL
     await this.updateProducto();
-    await this.setElementDataSlice();
+    await this.setElementData();
     this._snackBar.open("El producto fue editado con éxito!",'',{
       duration: 1500,
       horizontalPosition: 'center',
@@ -244,7 +239,7 @@ export class ProductComponent {
         this.editar();
     }
     if(buttonType==="cancelar"){
-      this.setElementDataSlice();
+      this.setElementData();
     }
   }
 
@@ -255,8 +250,21 @@ export class ProductComponent {
     if (endIndex > this.products.length){
       endIndex = this.products.length
     }
-    this.pageSlice = this.products.slice(startIndex, endIndex)
-    this.setElementDataSlice()
+    this.firstIndex = startIndex
+    this.lastIndex = endIndex
+    this.setElementData()
+  }
+
+  // Metodo para evitar null pointer exception al iniciar la aplicaión
+
+  productsLength(){
+
+    if(this.products){
+      return this.products.length
+    }
+    else{
+      return 0
+    }
   }
 
 }
