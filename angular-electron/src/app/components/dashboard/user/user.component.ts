@@ -150,7 +150,6 @@ export class UserComponent {
   async editarUsuario(){
     // Obtenemos valores del formularioS
     var usuario = this.form.value.user;
-    usuario = String(usuario).toLowerCase();
     var contraseña = null;
     if(this.form.value.password === this.form.value.passwordConfirm){
       contraseña = this.form.value.passwordConfirm;
