@@ -1,0 +1,52 @@
+.body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .login {
+    width: 100%;
+    max-width: 330px;
+    text-align: center;
+  }
+  
+  .example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+  }
+  
+  .example-full-width {
+  width: 100%;
+  }
+  
+  .ancho {
+  width: 80%;
+  }
+  
+  .button {
+  height: 50px;
+  }
+
+
+  .item {
+    font-size: 2rem;
+    font-weight: 700;
+    padding: 0.5em 1em;
+    color: var(--clr-accent);
+    background-color: var(--clr-rgba);
+    border: 10px solid var(--clr-accent);
+    border-radius: 5px;
+
+    transition-property: transform;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+  }
+
+  .item:hover {
+    transform: translateY(-10px);
+    /* background-color: var(--clr-accent);
+    color: var(--clr-light); */
+  }
