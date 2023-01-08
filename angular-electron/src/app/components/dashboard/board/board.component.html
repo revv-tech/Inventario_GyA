@@ -1,0 +1,46 @@
+<mat-toolbar style="height:80px;" color="primary" >
+    <span class="margin-top: 20px margin-bottom:20px" style="font-weight:lighter" >¡Bienvenido a Inventario GyA!</span>
+</mat-toolbar>
+
+<mat-card style="margin-top: 20px; margin-bottom: 20px;">
+    <mat-grid-list cols="2" rowHeight="2:1" style="margin-top: 20px; margin-bottom: 20px;">
+        <mat-grid-tile class="item" routerLink="/dashboard/charge">
+            <div class="body">
+                <div class="login">
+                    <img src="./assets/images/trade.png" width="40%" style="margin-bottom: 20px;">
+                    <h1 style="font-weight:bold" >Ventas</h1>
+                </div>
+            </div>
+            
+        </mat-grid-tile>
+        <mat-grid-tile class="item" routerLink="/dashboard/product">
+            <div class="body">
+                <div class="login">
+                    <img src="./assets/images/inventory.png" width="40%" style="margin-bottom: 20px;">
+                    <h1 style="font-weight:bold" >Bodega</h1>
+                </div>
+            </div>
+            
+        </mat-grid-tile>
+        <mat-grid-tile class="item" routerLink="/dashboard/report">
+            <div class="body">
+                <div class="login">
+                    <img src="./assets/images/report.png" width="40%" style="margin-bottom: 20px;">
+                    <h1 style="font-weight:bold" >Reportes</h1>
+                </div>
+            </div>
+        </mat-grid-tile>
+        <div *ngIf="currentUser.tipoUsuario == 'ADMIN'">
+            <mat-grid-tile class="item" routerLink="/dashboard/user">
+                <div class="body">
+                    <div class="login">
+                        <img src="./assets/images/user_2.png" width="30%" style="margin-bottom: 20px;">
+                        <h1 style="font-weight:bold" >Usuarios</h1>
+                    </div>
+                </div>
+            </mat-grid-tile>
+        </div>
+    </mat-grid-list>
+</mat-card>
+
+  

@@ -100,9 +100,9 @@ export class LoginComponent {
     // Get user to login
     if (this.userVerified){
       if(type == "ADMIN"){
-        this.router.navigate(['dashboard']);
+        this.router.navigate(['dashboard/board']);
       } else {
-        this.router.navigate(['dashboard']);
+        this.router.navigate(['dashboard/board']);
       }
       this.data.changeCurrentUser(this.user);
     }
