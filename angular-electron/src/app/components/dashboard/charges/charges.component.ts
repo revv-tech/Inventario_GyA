@@ -55,7 +55,7 @@ export class ChargesComponent {
   // Formulario de Venta
   formVenta: FormGroup
   isDisabled: true;
-  isEfectivo: false;
+  isTarjeta: false;
   dataSourceCart: any;
   dataSourceSearch: any;
   inputDisabled: true;
@@ -88,7 +88,6 @@ export class ChargesComponent {
     this.formVenta = this.fb2.group({
       total : [''],
       subtotal : [''],
-      tax : [''],
       discount : ['']
     })
     
@@ -193,7 +192,7 @@ export class ChargesComponent {
   }
 
   updateMetodoPago(event){
-    this.isEfectivo = event.checked;
+    this.isTarjeta = event.checked;
   }
 
   updateFactura(event){
@@ -213,17 +212,28 @@ export class ChargesComponent {
     }
 
     const quantity = this.formBuscar.value.units;
-    product_temp.IDProducto = element.IDProducto;
-    product_temp.cantidad = quantity;
-    product_temp.codigoBarra = element.codigoBarra;
-    product_temp.codigoCabys = element.codigoCabys;
-    product_temp.iva = element.iva;
-    product_temp.nombre = element.nombre;
-    product_temp.precio = element.precio;
+    if(isNaN(quantity)){
+        //Alerta de feedback
+        this._snackBar.open("La cantidad debe ser un número",'',{
+          duration: 1500,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        })
+    }
+    else{
+      product_temp.IDProducto = element.IDProducto;
+      product_temp.cantidad = quantity;
+      product_temp.codigoBarra = element.codigoBarra;
+      product_temp.codigoCabys = element.codigoCabys;
+      product_temp.iva = element.iva;
+      product_temp.nombre = element.nombre;
+      product_temp.precio = element.precio;
+  
+      this.carrito.push(product_temp);
+      this.setElementData();
+      this.formBuscar.reset();
+    }
 
-    this.carrito.push(product_temp);
-    this.setElementData();
-    this.formBuscar.reset();
   }
 
   deleteProductCarrito(product : any){
@@ -239,19 +249,20 @@ export class ChargesComponent {
 
   setElementData(){
     var total = 0;
+    var subtotal = 0
+    var descuento = this.formVenta.value.discount / 100
     let tempData: Product[] = [];
 
     for (let e in this.carrito) {
       tempData.push(this.carrito[e]);
-      total += this.carrito[e].cantidad * this.carrito[e].precio;
+      subtotal += this.carrito[e].cantidad * this.carrito[e].precio;
     }
     this.dataSourceCart = new MatTableDataSource(tempData);
-
+    total = subtotal - (subtotal * descuento)
     this.formVenta.setValue({
-      discount: 0,
-      tax: 0.13,
+      discount: descuento * 100,
       total: total,
-      subtotal: total
+      subtotal: subtotal
     });
   }
 
@@ -363,10 +374,10 @@ export class ChargesComponent {
     this.venta.fecha = (new Date()).toString();
     this.venta.monto = this.formVenta.value.total;
     
-    if(this.isEfectivo){
-      this.venta.metodo = "EFECTIVO";
-    } else {
+    if(this.isTarjeta){
       this.venta.metodo = "TARJETA";
+    } else {
+      this.venta.metodo = "EFECTIVO";
     }
     await this.addVenta();
     await this.getVentaByDate(this.venta.fecha);
@@ -417,9 +428,21 @@ export class ChargesComponent {
     this.product.nombre = name;
     this.product.IDVenta = 'NULL';
     // consulta SQL
+    
 
     if (barCode){
-      await this.getProductoBarras(barCode);
+      if(isNaN(barCode)){
+        //Alerta de feedback
+        this._snackBar.open("El código de barras debe ser un número",'',{
+          duration: 1500,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        })
+      }
+      else{
+        await this.getProductoBarras(barCode);
+      }
+      
     }
 
     else if (name){
