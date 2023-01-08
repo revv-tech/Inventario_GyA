@@ -10,6 +10,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ChargesComponent } from './charges/charges.component';
 import { UserComponent } from './user/user.component';
 import { ProfileInfoComponent } from './profile-info/profile-info.component';
+import { BoardComponent } from './board/board.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { ProfileInfoComponent } from './profile-info/profile-info.component';
     NavBarComponent,
     ChargesComponent,
     UserComponent,
-    ProfileInfoComponent
+    ProfileInfoComponent,
+    BoardComponent
   ],
   imports: [
     CommonModule,
