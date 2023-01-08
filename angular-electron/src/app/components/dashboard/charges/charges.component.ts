@@ -69,6 +69,8 @@ export class ChargesComponent {
   color: ThemePalette = 'accent';
   disabledFactura = false;
   checkedFactura = false;
+  disabledMetodo = false;
+  
   
 
   constructor(private fb: FormBuilder,private fb2: FormBuilder, private fb3: FormBuilder, private productService: ProductoService, private ventaService: VentaService, private productoXVentaService: ProductoxventaService, private _snackBar: MatSnackBar){
@@ -84,10 +86,10 @@ export class ChargesComponent {
       units: ['']
     })
     this.formVenta = this.fb2.group({
-      total : [{value: '', disabled:true}],
-      subtotal : [{value: '', disabled:true}],
-      tax : [{value: '', disabled:true}],
-      discount : [{value: '', disabled:true}]
+      total : [''],
+      subtotal : [''],
+      tax : [''],
+      discount : ['']
     })
     
 
@@ -238,6 +240,7 @@ export class ChargesComponent {
   setElementData(){
     var total = 0;
     let tempData: Product[] = [];
+
     for (let e in this.carrito) {
       tempData.push(this.carrito[e]);
       total += this.carrito[e].cantidad * this.carrito[e].precio;
@@ -358,14 +361,16 @@ export class ChargesComponent {
     }
     this.venta.descuento = this.formVenta.value.discount;
     this.venta.fecha = (new Date()).toString();
+    this.venta.monto = this.formVenta.value.total;
+    
     if(this.isEfectivo){
       this.venta.metodo = "EFECTIVO";
     } else {
       this.venta.metodo = "TARJETA";
     }
-    this.venta.monto = this.formVenta.value.total;
     await this.addVenta();
     await this.getVentaByDate(this.venta.fecha);
+     
     for(var e in this.carrito){
       this.productoxventa.IDProducto = this.carrito[e].IDProducto;
       this.productoxventa.IDVenta = this.venta.IDVenta;
