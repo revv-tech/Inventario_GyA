@@ -158,16 +158,16 @@
                         </mat-form-field>
                         <h3>Impuestos totales</h3>
                         <mat-form-field appearance="fill" class = "ancho">
-                            <input matInput autocomplete="off" formControlName = "tax">
+                            <input matInput autocomplete="off" formControlName = "tax" [readonly]="true">
                         </mat-form-field>
 
                         <h3>Subtotal</h3>
                         <mat-form-field appearance="fill" class = "ancho" >
-                            <input matInput autocomplete="off" formControlName = "total">
+                            <input matInput autocomplete="off" formControlName = "subtotal" [readonly]="true">
                         </mat-form-field>
                         <h2 style="font-weight:bold" >Total</h2>
                         <mat-form-field appearance="fill" class = "ancho">
-                            <input matInput autocomplete="off" formControlName = "subtotal">
+                            <input matInput autocomplete="off" formControlName = "total" [readonly]="true">
                         </mat-form-field>
                         
                         <div class="login" style="margin-bottom:20px">
