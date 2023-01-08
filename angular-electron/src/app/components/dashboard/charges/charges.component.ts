@@ -55,7 +55,7 @@ export class ChargesComponent {
   // Formulario de Venta
   formVenta: FormGroup
   isDisabled: true;
-  isEfectivo: false;
+  isTarjeta: false;
   dataSourceCart: any;
   dataSourceSearch: any;
   inputDisabled: true;
@@ -88,7 +88,6 @@ export class ChargesComponent {
     this.formVenta = this.fb2.group({
       total : [''],
       subtotal : [''],
-      tax : [''],
       discount : ['']
     })
     
@@ -193,7 +192,7 @@ export class ChargesComponent {
   }
 
   updateMetodoPago(event){
-    this.isEfectivo = event.checked;
+    this.isTarjeta = event.checked;
   }
 
   updateFactura(event){
@@ -250,19 +249,20 @@ export class ChargesComponent {
 
   setElementData(){
     var total = 0;
+    var subtotal = 0
+    var descuento = this.formVenta.value.discount / 100
     let tempData: Product[] = [];
 
     for (let e in this.carrito) {
       tempData.push(this.carrito[e]);
-      total += this.carrito[e].cantidad * this.carrito[e].precio;
+      subtotal += this.carrito[e].cantidad * this.carrito[e].precio;
     }
     this.dataSourceCart = new MatTableDataSource(tempData);
-
+    total = subtotal - (subtotal * descuento)
     this.formVenta.setValue({
-      discount: 0,
-      tax: 0.13,
+      discount: descuento * 100,
       total: total,
-      subtotal: total
+      subtotal: subtotal
     });
   }
 
@@ -374,10 +374,10 @@ export class ChargesComponent {
     this.venta.fecha = (new Date()).toString();
     this.venta.monto = this.formVenta.value.total;
     
-    if(this.isEfectivo){
-      this.venta.metodo = "EFECTIVO";
-    } else {
+    if(this.isTarjeta){
       this.venta.metodo = "TARJETA";
+    } else {
+      this.venta.metodo = "EFECTIVO";
     }
     await this.addVenta();
     await this.getVentaByDate(this.venta.fecha);
