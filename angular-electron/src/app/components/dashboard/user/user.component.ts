@@ -42,7 +42,6 @@ export class UserComponent {
       password : [''],
       passwordConfirm : [''],
       userType : false,
-      IDInventory : ['']
     })
   }
 
@@ -102,7 +101,7 @@ export class UserComponent {
   }
 
   async agregarUsuario(){
-    this.user.IDInventario = this.form.value.IDInventory;
+    this.user.IDInventario = 2;
     this.user.IDUsuario = null;
     if(this.form.value.password === this.form.value.passwordConfirm){
       const encPassword = CryptoJS.AES.encrypt( this.form.value.passwordConfirm.trim(), this.key.trim()).toString();
@@ -160,7 +159,7 @@ export class UserComponent {
     } else {
       tipoUsuario = "EMPLEADO";
     }
-    const IDInventario = this.form.value.IDInventory;
+    const IDInventario = 2;
     // Asignamos valores al objeto producto
     this.user.IDInventario = IDInventario;
     const encPassword = CryptoJS.AES.encrypt(contraseña.trim(), this.key.trim()).toString();
