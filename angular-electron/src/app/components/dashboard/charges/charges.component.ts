@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductoService } from 'src/app/services/producto.service';
@@ -8,7 +9,6 @@ import { Product } from '../product/product.component';
 import { ThemePalette } from '@angular/material/core';
 import { lastValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
-import { ThisReceiver } from '@angular/compiler';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -28,6 +28,7 @@ export class ChargesComponent {
     codigoBarra: null,
     codigoCabys: null,
     iva: null,
+    typeiva: null,
     nombre: null,
     precio: null,
     IDVenta: null,
@@ -39,7 +40,8 @@ export class ChargesComponent {
     fecha: null,
     descuento: null,
     cantidad: null,
-    monto: null,
+    total: null,
+    subtotal: null,
     metodo: null,
     IDInventario: null
   };
@@ -48,8 +50,11 @@ export class ChargesComponent {
     IDProductoXVenta: null,
     IDProducto : null,
     IDVenta: null,
-    cantidad: null
+    cantidad: null,
+    total: null,
+    subtotal: null
   };
+  pipe = new DatePipe('en-US');
   // Formulario de Busqueda
   formBuscar: FormGroup
   // Formulario de Venta
@@ -205,6 +210,7 @@ export class ChargesComponent {
       codigoBarra: null,
       codigoCabys: null,
       iva: null,
+      typeiva: null,
       nombre: null,
       precio: null,
       IDVenta: null,
@@ -226,6 +232,11 @@ export class ChargesComponent {
       product_temp.codigoBarra = element.codigoBarra;
       product_temp.codigoCabys = element.codigoCabys;
       product_temp.iva = element.iva;
+      if(element.iva == '0'){
+        product_temp.typeiva = "NO TIENE IVA" 
+      } else {
+        product_temp.typeiva = "TIENE IVA"
+      }
       product_temp.nombre = element.nombre;
       product_temp.precio = element.precio;
   
@@ -371,8 +382,9 @@ export class ChargesComponent {
       await this.updateProducto();
     }
     this.venta.descuento = this.formVenta.value.discount;
-    this.venta.fecha = (new Date()).toString();
-    this.venta.monto = this.formVenta.value.total;
+    this.venta.fecha = this.pipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
+    this.venta.total = this.formVenta.value.total;
+    this.venta.subtotal = this.formVenta.value.subtotal;
     
     if(this.isTarjeta){
       this.venta.metodo = "TARJETA";
@@ -386,12 +398,14 @@ export class ChargesComponent {
       this.productoxventa.IDProducto = this.carrito[e].IDProducto;
       this.productoxventa.IDVenta = this.venta.IDVenta;
       this.productoxventa.cantidad = this.carrito[e].cantidad;
+      this.productoxventa.subtotal = this.carrito[e].precio * this.carrito[e].cantidad;
+      this.productoxventa.total = (this.carrito[e].precio - this.carrito[e].precio * (this.venta.descuento/100)) * this.carrito[e].cantidad;
       await this.addProductoXVenta();
     }
     await this.getAllPXVByIDVenta(Number(this.venta.IDVenta));
     
     if (this.checkedFactura){
-      this.createPDF(this.productosxventas,this.venta.monto,this.venta.descuento,this.venta.fecha);
+      this.createPDF(this.productosxventas,this.venta.total,this.venta.descuento,this.venta.fecha);
     }
     this.resetPage();
   }
@@ -404,6 +418,7 @@ export class ChargesComponent {
     this.product.codigoBarra = null;
     this.product.codigoCabys = null;
     this.product.iva = null;
+    this.product.typeiva = null;
     this.product.nombre = null;
     this.product.precio = null;
   }
