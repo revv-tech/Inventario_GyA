@@ -41,4 +41,16 @@ export class VentaService {
     return this.http.get(`${this.url}getProductoNombre.php?nombre=${nombre}`);
   }
 
+  getVentasByDateRange(fechaInicio, fechaFinal){
+    return this.http.get(`${this.url}getVentasByDateRange.php?fechaInicio=${fechaInicio}&fechaFinal=${fechaFinal}`);
+  }
+
+  getLessSoldProducts(fechaInicio, fechaFinal){
+    return this.http.get(`${this.url}getLessSoldProducts.php?fechaInicio=${fechaInicio}&fechaFinal=${fechaFinal}`);
+  }
+
+  getMostSelledProducts(fechaInicio, fechaFinal){
+    return this.http.get(`${this.url}getMostSelledProducts.php?fechaInicio=${fechaInicio}&fechaFinal=${fechaFinal}`);
+  }
+
 }

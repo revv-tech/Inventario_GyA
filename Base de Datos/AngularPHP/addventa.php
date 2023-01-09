@@ -7,8 +7,8 @@ $params = json_decode($json);
 
 require("./DBConnection.php");
 $con = returnConection();
- $registro=mysqli_query($con ,"insert into venta (IDVenta, fecha, descuento, cantidad, monto, metodo, IDInventario) 
- values ('NULL','$params->fecha', '$params->descuento', '$params->cantidad', '$params->monto', '$params->metodo', '$params->IDInventario')");
+ $registro=mysqli_query($con ,"insert into venta (IDVenta, fecha, descuento, cantidad, total, subtotal, metodo, IDInventario) 
+ values ('NULL','$params->fecha', '$params->descuento', '$params->cantidad', '$params->total', '$params->subtotal', '$params->metodo', '$params->IDInventario')");
 
 class Result{}
 

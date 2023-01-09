@@ -14,6 +14,7 @@ export interface Product {
   codigoBarra: any;
   codigoCabys: any;
   iva: any;
+  typeiva: any;
   nombre: any;
   precio: any;
   IDVenta: any;
@@ -42,6 +43,7 @@ export class ProductComponent {
     codigoBarra: null,
     codigoCabys: null,
     iva: null,
+    typeiva:null,
     nombre: null,
     precio: null,
     IDVenta: null,
@@ -132,7 +134,6 @@ export class ProductComponent {
     const quantity = this.form.value.quantity;
 
     if(!iva){
-      console.log("Undefined")
       iva = 0
     }
     // Asignamos valores al objeto producto
@@ -140,6 +141,11 @@ export class ProductComponent {
     this.product.codigoBarra = barCode;
     this.product.codigoCabys = cabyCode;
     this.product.iva = iva;
+    if(iva == 0){
+      this.product.typeiva = "NO TIENE IVA";
+    } else {
+      this.product.typeiva = "TIENE IVA";
+    }
     this.product.nombre = name;
     this.product.precio = price;
     // consulta SQL
@@ -195,6 +201,11 @@ export class ProductComponent {
     this.product.codigoBarra = barCode;
     this.product.codigoCabys = cabyCode;
     this.product.iva = iva;
+    if(iva === 0){
+      this.product.typeiva = "NO TIENE IVA";
+    } else {
+      this.product.typeiva = "TIENE IVA";
+    }
     this.product.nombre = name;
     this.product.precio = price;
     this.product.IDVenta = 'NULL';
