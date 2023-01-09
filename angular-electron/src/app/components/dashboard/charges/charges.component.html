@@ -152,15 +152,10 @@
                 
                 <div class="example-container">
                     <form [formGroup] = "formVenta">
-                        <h3>Descuentos totales</h3>
+                        <h3>Descuento</h3>
                         <mat-form-field appearance="fill" class = "ancho">
                             <input matInput autocomplete="off" formControlName = "discount">
                         </mat-form-field>
-                        <h3>Impuestos totales</h3>
-                        <mat-form-field appearance="fill" class = "ancho">
-                            <input matInput autocomplete="off" formControlName = "tax" [readonly]="true">
-                        </mat-form-field>
-
                         <h3>Subtotal</h3>
                         <mat-form-field appearance="fill" class = "ancho" >
                             <input matInput autocomplete="off" formControlName = "subtotal" [readonly]="true">
@@ -171,7 +166,7 @@
                         </mat-form-field>
                         
                         <div class="login" style="margin-bottom:20px">
-                            <h3 class="example-h2">¿Desea generar factura?</h3>
+                            <h3 class="example-h2">Generar factura</h3>
                             <mat-slide-toggle
                                 class="example-margin"
                                 (change)="updateFactura($event)"
@@ -181,18 +176,19 @@
                             </mat-slide-toggle>
                         </div>
                         <div class="login" style="margin-bottom:20px">
-                            <h3 class="example-h2">¿El tipo de pago es en efectivo?</h3>
+                            <h3 class="example-h2">Pago con tarjeta</h3>
                             <mat-slide-toggle
                                 class="example-margin"
                                 (change)="updateMetodoPago($event)"
                                 [color]="color"
-                                [checked]="checkedFactura"
-                                [disabled]="disabledMetodo">
+                                [checked]="isTarjeta"
+                                [disabled]="disabledFactura">
                             </mat-slide-toggle>
                         </div>
                         
                         
                         <button  mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit"  [disabled]="isDisabled" (click)="agregarVenta()"> Confirmar compra </button>
+                        <button  mat-raised-button style="margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" color="primary" type="submit"  [disabled]="isDisabled" (click)="setElementData()"> Aplicar Descuento </button>
                         <button mat-button style="margin-left: 10px;" color="warn" type="button" (click)="resetPage()"> Cancelar compra </button>
                         
                     </form> 

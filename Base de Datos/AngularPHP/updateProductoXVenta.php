@@ -9,6 +9,8 @@ $con = returnConection();
 
 mysqli_query($con ,"update prductoxventa set IDProducto='$params->IDProducto',
 IDVenta='$params->IDVenta',
+total='$params->total',
+subtotal='$params->subtotal',
 cantidad='$params->cantidad' 
 where IDProductoXVenta =$params->IDProductoXVenta ");
 

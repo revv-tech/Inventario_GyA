@@ -12,6 +12,7 @@ mysqli_query($con ,"update producto set
     codigoBarra='$params->codigoBarra', 
     codigoCabys='$params->codigoCabys', 
     iva='$params->iva', 
+    typeiva='$params->typeiva',
     nombre='$params->nombre', 
     precio='$params->precio'
     where IDProducto=$params->IDProducto");

@@ -28,7 +28,6 @@ export class ProfileInfoComponent {
       password : ['',Validators.required],
       confirmedPassword: ['',Validators.required],
       userType: false,
-      IDInventory: ['',Validators.required]
     })
   }
   
@@ -61,7 +60,7 @@ export class ProfileInfoComponent {
     if(this.form.value.password === this.form.value.confirmedPassword){
       contraseña = this.form.value.confirmedPassword;
     }
-    const IDInventario = this.form.value.IDInventory;
+    const IDInventario = 2;
     // Asignamos valores al objeto producto
     this.user.IDUsuario = this.currentUser.IDUsuario;
     this.user.IDInventario = IDInventario;
