@@ -12,6 +12,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import { jsPDF } from "jspdf";
+import autoTable from 'jspdf-autotable'
 
 
 @Component({
@@ -296,81 +298,57 @@ export class ChargesComponent {
   }
 
 
-  createPDF(productXVenta : any, total : string, discount : string, date : string){
-
+  createPDF(idVenta: number, productXVenta : any, total : string, subtotal : string, discount : string, payMethod : string){
     var rows = [];
-    rows.push([ 'ID de Producto', 'Nombre', 'Cantidad', 'Precio' ]);
-    var fCompra = 'Fecha de la compra:  ' + date;
+    var _foot = [];
+    const date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let currentDate = `${day}-${month}-${year}`;
+    var fCompra = 'Fecha de la compra:  ' + currentDate;
+    var sTotal = 'Subtotal de la compra: ' + subtotal;
     var pTotal = 'Precio total de la compra:  ' + total;
     var dCompra = 'Descuento total de la compra: ' + discount;
+    var pMethod = 'Método de pago: ' + payMethod;
     var encabezado = 'Lista de Artículos adquiridos: '
+    _foot.push([sTotal])
+    _foot.push([pTotal])
     for (var product of productXVenta){
       rows.push([product.IDProducto, product.nombre, product.cantidad, product.precio])
     }
-    const pdfDefinition: any  = {
-      // Styles for text on the pdf
-      styles: {
-        header: {
-          fontSize: 22,
-          bold: true,
-          alignment: 'center'
-        },
-        chapter: {
-          italics: true,
-          fontSize: 12,
-          alignment: 'right',
-          lineHeight: 2
-        },
-        sentence: {
-          italics: true,
-          fontSize: 10,
-          alignment: 'left',
-          lineHeight: 2
-        }
-      },
-      pageSize: 'A4',
-      // Header and Footer
-      header: { text: 'Minisúper GyA', style: 'header' },
-      footer: { text: 'Gracias por su compra!',  style: 'header' },
-      content: [
-        {
-          text: 'Teléfono: 8417-6120',
-          style: 'chapter',
-        },
-        {
-          text: 'Dirección: 250mts al norte del MOPT, Buenos Aires',
-          style: 'chapter',
-        },
-        {
-          text: fCompra,
-          style: 'chapter',
-        },
-        {
-          text: encabezado,
-          style: 'sentence',
-        },
-        {
-          layout: 'lightHorizontalLines', // optional
-          table: {
-            // headers are automatically repeated if the table spans over multiple pages
-            // you can declare how many rows should be treated as headers
-            headerRows: 1,
-            widths: [ '*', 'auto', 100, '*' ],
-            body: rows
-          }
-        },
-        {
-          text: dCompra,
-          style: 'chapter',
-        },
-        {
-          text: pTotal,
-          style: 'chapter',
-        }
-      ]
-    };
-    const pdf = pdfMake.createPdf(pdfDefinition).download();
+
+    // Default export is a4 paper, portrait, using millimeters for units
+    const doc = new jsPDF({
+      orientation: "p",
+      unit: "mm",
+      format: [100,250]
+    });
+    doc.setFont('times');
+    doc.setFontSize(20);
+    doc.text('Minisúper GyA',30,10);
+    doc.setFontSize(8);
+    doc.text(fCompra,5,20);
+    doc.text(pMethod,5,25);
+    doc.text(encabezado,5,30);
+    doc.text(sTotal,5,35);
+    doc.text(pTotal,5,40);
+    autoTable(doc,{
+      theme: 'plain',
+      head: [[ 'Ident. de Producto', 'Nombre', 'Cantidad', 'Precio' ]],
+      body: rows,
+      foot: _foot,
+      startY: 45,
+      styles: {fontSize: 5, font: 'times'}
+    })
+
+
+    doc.autoPrint();
+    doc.save('Facturas/'+ 'VentaID_' + idVenta.toString() + 'Fecha:__'+ currentDate + '.pdf');
   }
+
+
+
   async agregarVenta(){
     this.venta.IDInventario = 2;
     this.venta.cantidad = 0;
@@ -405,7 +383,7 @@ export class ChargesComponent {
     await this.getAllPXVByIDVenta(Number(this.venta.IDVenta));
     
     if (this.checkedFactura){
-      this.createPDF(this.productosxventas,this.venta.total,this.venta.descuento,this.venta.fecha);
+      this.createPDF(Number(this.venta.IDVenta), this.productosxventas, this.venta.total, this.venta.subtotal, this.venta.descuento, this.venta.metodo);
     }
     this.resetPage();
   }
