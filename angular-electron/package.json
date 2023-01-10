@@ -26,6 +26,9 @@
     "crypto-js": "^4.1.1",
     "electron-reload": "^2.0.0-alpha.1",
     "escomplex": "^2.0.0-alpha",
+    "fs": "^0.0.1-security",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.28",
     "mysql": "^2.18.1",
     "pdfmake": "^0.2.7",
     "promise-mysql": "^5.2.0",
@@ -47,5 +50,10 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
     "typescript": "~4.8.2"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
   }
 }
