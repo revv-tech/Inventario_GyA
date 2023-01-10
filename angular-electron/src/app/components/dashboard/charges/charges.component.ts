@@ -307,13 +307,13 @@ export class ChargesComponent {
     let year = date.getFullYear();
     let currentDate = `${day}-${month}-${year}`;
     var fCompra = 'Fecha de la compra:  ' + currentDate;
-    var sTotal = 'Subtotal de la compra: ' + subtotal;
+
     var pTotal = 'Precio total de la compra:  ' + total;
     var dCompra = 'Descuento total de la compra: ' + discount;
     var pMethod = 'Método de pago: ' + payMethod;
     var encabezado = 'Lista de Artículos adquiridos: '
-    _foot.push([sTotal])
-    _foot.push([pTotal])
+    _foot.push(['','','Subtotal de la compra: ',subtotal])
+    _foot.push(['','','Total de la compra: ',total])
     for (var product of productXVenta){
       rows.push([product.IDProducto, product.nombre, product.cantidad, product.precio])
     }
@@ -331,20 +331,18 @@ export class ChargesComponent {
     doc.text(fCompra,5,20);
     doc.text(pMethod,5,25);
     doc.text(encabezado,5,30);
-    doc.text(sTotal,5,35);
-    doc.text(pTotal,5,40);
     autoTable(doc,{
       theme: 'plain',
       head: [[ 'Ident. de Producto', 'Nombre', 'Cantidad', 'Precio' ]],
       body: rows,
       foot: _foot,
-      startY: 45,
+      startY: 35,
       styles: {fontSize: 5, font: 'times'}
     })
 
 
-    doc.autoPrint();
-    doc.save('Facturas/'+ 'VentaID_' + idVenta.toString() + 'Fecha:__'+ currentDate + '.pdf');
+    //doc.autoPrint();
+    doc.save('Facturas/'+ 'VentaID_' + idVenta.toString() + 'Fecha:_'+ currentDate + '.pdf');
   }
 
 
