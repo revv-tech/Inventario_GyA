@@ -341,8 +341,10 @@ export class ChargesComponent {
     })
 
 
-    //doc.autoPrint();
+    doc.autoPrint();
     doc.save('Facturas/'+ 'VentaID_' + idVenta.toString() + 'Fecha:_'+ currentDate + '.pdf');
+    doc.output('dataurlnewwindow');     //opens the data uri in new window
+    
   }
 
 
